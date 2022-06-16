@@ -261,7 +261,7 @@ class GoogleAuthorization
 		$client->setPrompt('select_account consent');
 		$client->setScopes($scopes);
 
-		if (file_exists($credentialsFile))
+		if ($credentialsFile !== null && file_exists($credentialsFile))
 		{
 			$client->setAuthConfig($credentialsFile);
 		}
