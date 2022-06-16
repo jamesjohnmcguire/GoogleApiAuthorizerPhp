@@ -114,7 +114,10 @@ class GoogleAuthorization
 		// else, nothing else to do...  if GOOGLE_APPLICATION_CREDENTIALS is
 		// already set, Google API will use that
 
-		$client->useApplicationDefaultCredentials();
+		if ($client !== null)
+		{
+			$client->useApplicationDefaultCredentials();
+		}
 
 		return $client;
 	}
@@ -206,13 +209,16 @@ class GoogleAuthorization
 		{
 			$client = self::SetClient($credentialsFile, $name, $scopes);
 
-			$authorizationUrl = $client->createAuthUrl();
-			$authorizationCode =
-				self::PromptForAuthorizationCodeCli($authorizationUrl);
-	
-			$accessToken =
-				$client->fetchAccessTokenWithAuthCode($authorizationCode);
-			$client = self::SetAccessToken($client, $accessToken, $tokensFile);
+			if ($client !== null)
+			{
+				$authorizationUrl = $client->createAuthUrl();
+				$authorizationCode =
+					self::PromptForAuthorizationCodeCli($authorizationUrl);
+		
+				$accessToken =
+					$client->fetchAccessTokenWithAuthCode($authorizationCode);
+				$client = self::SetAccessToken($client, $accessToken, $tokensFile);
+			}
 		}
 
 		return $client;
@@ -254,16 +260,22 @@ class GoogleAuthorization
 	private static function SetClient(
 		?string $credentialsFile, string $name, array $scopes)
 	{
-		$client = new Google_Client();
-
-		$client->setAccessType('offline');
-		$client->setApplicationName($name);
-		$client->setPrompt('select_account consent');
-		$client->setScopes($scopes);
+		$client = null;
 
 		if ($credentialsFile !== null && file_exists($credentialsFile))
 		{
-			$client->setAuthConfig($credentialsFile);
+			$client = new Google_Client();
+
+			$client->setAccessType('offline');
+			$client->setApplicationName($name);
+			$client->setPrompt('select_account consent');
+			$client->setScopes($scopes);
+	
+				$client->setAuthConfig($credentialsFile);
+		}
+		else
+		{
+			echo 'credentials not found - can\'t create client' . PHP_EOL;
 		}
 
 		return $client;
