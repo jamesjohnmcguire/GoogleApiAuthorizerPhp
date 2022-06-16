@@ -231,15 +231,22 @@ class GoogleAuthorization
 			$json =  json_encode($tokens);
 			file_put_contents($tokensFile, $json);
 		}
+		else if ($tokens === null)
+		{
+			echo 'Tokens is null' . PHP_EOL;
+		}
+		else if (!is_array($tokens))
+		{
+			echo 'Tokens is not an array' . PHP_EOL;
+		}
 		else if (array_key_exists('error', $tokens))
 		{
 			echo 'Error key exists in tokens' . PHP_EOL;
 		}
 		else
 		{
-			echo 'Tokens is not an array' . PHP_EOL;
+			echo 'Problem with tokens object' . PHP_EOL;
 		}
-
 
 		return $updatedClient;
 	}
