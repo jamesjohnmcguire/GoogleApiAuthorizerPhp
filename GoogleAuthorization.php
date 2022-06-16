@@ -252,7 +252,7 @@ class GoogleAuthorization
 	}
 
 	private static function SetClient(
-		string $credentialsFile, string $name, array $scopes)
+		?string $credentialsFile, string $name, array $scopes)
 	{
 		$client = new Google_Client();
 
