@@ -57,7 +57,7 @@ class GoogleAuthorization
 				$client = self::AuthorizeToken(
 					$credentialsFile, $tokensFile, $name, $scopes);
 				break;
-			}
+		}
 
 		// Final fall back, prompt user for confirmation code through web page
 		if ($client === null && PHP_SAPI === 'cli')
@@ -232,9 +232,9 @@ class GoogleAuthorization
 			(!array_key_exists('error', $tokens)))
 		{
 			$client->setAccessToken($tokens);
-			$updatedClient = new $client;
+			$updatedClient = $client;
 
-			$json =  json_encode($tokens);
+			$json = json_encode($tokens);
 			file_put_contents($tokensFile, $json);
 		}
 		else if ($tokens === null)
