@@ -104,19 +104,30 @@ class GoogleAuthorization
 	private static function AuthorizeServiceAccount(
 		$serviceAccountFilePath, $name, $scopes)
 	{
-		$client = self::SetClient(null, $name, $scopes);
+		$client = null;
 
 		if (file_exists($serviceAccountFilePath))
 		{
 			putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $serviceAccountFilePath);
 		}
 
-		// else, nothing else to do...  if GOOGLE_APPLICATION_CREDENTIALS is
-		// already set, Google API will use that
+		$exists = getenv('GOOGLE_APPLICATION_CREDENTIALS');
 
-		if ($client !== null)
+		if ($exists !== false)
 		{
-			$client->useApplicationDefaultCredentials();
+			$client = self::SetClient(null, $name, $scopes);
+
+			// nothing else to do... Google API will use
+			// GOOGLE_APPLICATION_CREDENTIALS file.
+
+			if ($client !== null)
+			{
+				$client->useApplicationDefaultCredentials();
+			}
+		}
+		else
+		{
+			echo "WARNING: Service account credentials not set" . PHP_EOL;
 		}
 
 		return $client;
