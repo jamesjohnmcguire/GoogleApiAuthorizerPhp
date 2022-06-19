@@ -268,12 +268,13 @@ class GoogleAuthorization
 		return $updatedClient;
 	}
 
-	private static function SetClient(
-		?string $credentialsFile, string $name, array $scopes)
+	private static function SetClient(?string $credentialsFile, string $name,
+		array $scopes, bool $credentialsRequired = true)
 	{
 		$client = null;
 
-		if ($credentialsFile !== null && file_exists($credentialsFile))
+		if ($credentialsRequired === false ||
+			($credentialsFile !== null && file_exists($credentialsFile)))
 		{
 			$client = new Google_Client();
 
@@ -281,10 +282,13 @@ class GoogleAuthorization
 			$client->setApplicationName($name);
 			$client->setPrompt('select_account consent');
 			$client->setScopes($scopes);
-	
-				$client->setAuthConfig($credentialsFile);
 		}
-		else
+
+		if ($credentialsFile !== null && file_exists($credentialsFile))
+		{
+			$client->setAuthConfig($credentialsFile);
+		}
+		else if ($credentialsRequired === true)
 		{
 			echo 'credentials not found - can\'t create client' . PHP_EOL;
 		}
