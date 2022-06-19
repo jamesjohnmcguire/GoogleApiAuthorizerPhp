@@ -106,7 +106,7 @@ function TestRequestUser()
 function TestServiceAccount()
 {
 	$client = GoogleAuthorization::Authorize(
-		Mode::Token,
+		Mode::ServiceAccount,
 		'',
 		'',
 		'',
@@ -137,7 +137,48 @@ function TestTokens()
 	}
 }
 
+$command = null;
+$credentialsFilePath = null;
+$serviceAccountFilePath = null;
+
+if (PHP_SAPI == 'cli')
+{
+	if (!empty($argv[1]))
+	{
+		$command = $argv[1];
+	}
+
+	if (!empty($argv[2]))
+	{
+		$credentialsFilePath = $argv[2];
+	}
+
+	if (!empty($argv[3]))
+	{
+		$serviceAccountFilePath = $argv[3];
+	}
+}
+else
+{
+	if ((!empty($_GET)) && (!empty($_GET['command'])))
+	{
+		$command = $_GET['command'];
+	}
+
+	if ((!empty($_GET)) && (!empty($_GET['credentials'])))
+	{
+		$credentialsFilePath = $_GET['credentials'];
+	}
+
+	if ((!empty($_GET)) && (!empty($_GET['service'])))
+	{
+		$serviceAccountFilePath = $_GET['service'];
+	}
+}
+
+TestServiceAccount();
 TestDiscover();
+echo PHP_EOL . 'TestDiscover finished' . PHP_EOL;
 TestRequestUser();
 TestTokens();
 TestOauth();
