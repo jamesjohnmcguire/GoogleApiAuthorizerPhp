@@ -16,12 +16,12 @@ class GoogleAuthorization
 {
 	public static function Authorize (
 		Mode $mode,
-		string $serviceAccountFile,
-		string $credentialsFile,
-		string $tokensFile,
-		string $name,
-		array $scopes,
-		string $redirectUrl = null)
+		?string $serviceAccountFile,
+		?string $credentialsFile,
+		?string $tokensFile,
+		?string $name,
+		?array $scopes,
+		?string $redirectUrl = null)
 	{
 		$client = null;
 
