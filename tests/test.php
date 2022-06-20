@@ -119,15 +119,15 @@ function TestServiceAccount($serviceAccountFilePath)
 	}
 }
 
-function TestTokens()
+function TestTokens($credentialsFilePath)
 {
 	echo 'Testing Tokens...' . PHP_EOL;
 
 	$client = GoogleAuthorization::Authorize(
 		Mode::Token,
-		'',
-		'credentials.json',
-		'tokens.json',
+		$credentialsFilePath,
+		null,
+		null,
 		'Google Drive API File Uploader',
 		['https://www.googleapis.com/auth/drive']);
 
@@ -192,7 +192,7 @@ switch($command)
 		TestServiceAccount($serviceAccountFilePath);
 		break;
 	case 'tokens':
-		TestTokens();
+		TestTokens($credentialsFilePath);
 		break;
 	default:
 		break;
