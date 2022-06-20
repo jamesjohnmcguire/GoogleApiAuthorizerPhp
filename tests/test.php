@@ -103,12 +103,12 @@ function TestRequestUser()
 		['https://www.googleapis.com/auth/drive']);
 }
 
-function TestServiceAccount()
+function TestServiceAccount($serviceAccountFilePath)
 {
 	$client = GoogleAuthorization::Authorize(
 		Mode::ServiceAccount,
 		'',
-		'',
+		$serviceAccountFilePath,
 		'',
 		'Google Drive API File Uploader',
 		['https://www.googleapis.com/auth/drive']);
@@ -176,9 +176,24 @@ else
 	}
 }
 
-TestServiceAccount();
-TestDiscover();
-echo PHP_EOL . 'TestDiscover finished' . PHP_EOL;
-TestRequestUser();
-TestTokens();
-TestOauth();
+switch($command)
+{
+	case 'discover':
+		TestDiscover();
+		echo PHP_EOL . 'TestDiscover finished' . PHP_EOL;
+		break;
+	case 'oauth':
+		TestOauth();
+		break;
+	case 'request':
+		TestRequestUser();
+		break;
+	case 'service':
+		TestServiceAccount($serviceAccountFilePath);
+		break;
+	case 'tokens':
+		TestTokens();
+		break;
+	default:
+		break;
+}
