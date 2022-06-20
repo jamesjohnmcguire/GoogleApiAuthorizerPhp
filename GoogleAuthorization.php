@@ -16,8 +16,8 @@ class GoogleAuthorization
 {
 	public static function Authorize (
 		Mode $mode,
-		?string $serviceAccountFile,
 		?string $credentialsFile,
+		?string $serviceAccountFile,
 		?string $tokensFile,
 		?string $name,
 		?array $scopes,
