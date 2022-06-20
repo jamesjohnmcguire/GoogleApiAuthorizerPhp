@@ -111,11 +111,12 @@ class GoogleAuthorization
 			putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $serviceAccountFilePath);
 		}
 
-		$exists = getenv('GOOGLE_APPLICATION_CREDENTIALS');
+		$serviceAccountFilePath = getenv('GOOGLE_APPLICATION_CREDENTIALS');
 
-		if ($exists !== false)
+		if ($serviceAccountFilePath !== false &&
+			file_exists($serviceAccountFilePath))
 		{
-			$client = self::SetClient(null, $name, $scopes);
+			$client = self::SetClient(null, $name, $scopes, false);
 
 			// nothing else to do... Google API will use
 			// GOOGLE_APPLICATION_CREDENTIALS file.
