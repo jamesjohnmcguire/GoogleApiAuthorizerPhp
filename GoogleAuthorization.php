@@ -249,7 +249,11 @@ class GoogleAuthorization
 			$updatedClient = $client;
 
 			$json = json_encode($tokens);
-			file_put_contents($tokensFile, $json);
+
+			if (!empty($tokensFile))
+			{
+				file_put_contents($tokensFile, $json);
+			}
 		}
 		else if ($tokens === null)
 		{
