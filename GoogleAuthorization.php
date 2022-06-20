@@ -109,6 +109,7 @@ class GoogleAuthorization
 		if ($serviceAccountFilePath !== null &&
 			file_exists($serviceAccountFilePath))
 		{
+			$serviceAccountFilePath = realpath($serviceAccountFilePath);
 			putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $serviceAccountFilePath);
 		}
 
