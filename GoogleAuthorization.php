@@ -106,7 +106,8 @@ class GoogleAuthorization
 	{
 		$client = null;
 
-		if (file_exists($serviceAccountFilePath))
+		if ($serviceAccountFilePath !== null &&
+			file_exists($serviceAccountFilePath))
 		{
 			putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $serviceAccountFilePath);
 		}
@@ -166,7 +167,7 @@ class GoogleAuthorization
 	{
 		$accessToken = null;
 
-		if (file_exists($tokenFilePath))
+		if ($tokenFilePath !== null && file_exists($tokenFilePath))
 		{
 			$fileContents = file_get_contents($tokenFilePath);
 			$accessToken = json_decode($fileContents, true);
