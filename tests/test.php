@@ -119,7 +119,7 @@ function TestServiceAccount($serviceAccountFilePath)
 	}
 }
 
-function TestTokens($credentialsFilePath)
+function TestTokens($credentialsFilePath, $tokensFilePath)
 {
 	echo 'Testing Tokens...' . PHP_EOL;
 
@@ -127,7 +127,7 @@ function TestTokens($credentialsFilePath)
 		Mode::Token,
 		$credentialsFilePath,
 		null,
-		null,
+		$tokensFilePath,
 		'Google Drive API File Uploader',
 		['https://www.googleapis.com/auth/drive']);
 
@@ -140,6 +140,7 @@ function TestTokens($credentialsFilePath)
 $command = null;
 $credentialsFilePath = null;
 $serviceAccountFilePath = null;
+$tokensFilePath = null;
 
 if (PHP_SAPI == 'cli')
 {
@@ -157,6 +158,11 @@ if (PHP_SAPI == 'cli')
 	{
 		$serviceAccountFilePath = $argv[3];
 	}
+
+	if (!empty($argv[4]))
+	{
+		$tokensFilePath = $argv[4];
+	}
 }
 else
 {
@@ -173,6 +179,11 @@ else
 	if ((!empty($_GET)) && (!empty($_GET['service'])))
 	{
 		$serviceAccountFilePath = $_GET['service'];
+	}
+
+	if ((!empty($_GET)) && (!empty($_GET['tokens'])))
+	{
+		$tokensFilePath = $_GET['tokens'];
 	}
 }
 
@@ -192,7 +203,7 @@ switch($command)
 		TestServiceAccount($serviceAccountFilePath);
 		break;
 	case 'tokens':
-		TestTokens($credentialsFilePath);
+		TestTokens($credentialsFilePath, $tokensFilePath);
 		break;
 	default:
 		break;
