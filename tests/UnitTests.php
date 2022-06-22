@@ -18,9 +18,11 @@ final class UnitTests extends TestCase
 
 	public static function setUpBeforeClass() : void
 	{
-		if (!empty($argv[4]))
+		global $argv;
+
+		if (!empty($argv[5]))
 		{
-			self::$credentialsFilePath = $argv[4];
+			self::$credentialsFilePath = $argv[5];
 		}
 	}
 
@@ -39,7 +41,7 @@ final class UnitTests extends TestCase
 	{
 		$client = GoogleAuthorization::Authorize(
 			Mode::Token,
-			self::$credentialsFilePath,
+			null,
 			null,
 			null,
 			'Google Drive API File Uploader',
@@ -52,7 +54,7 @@ final class UnitTests extends TestCase
 	{
 		$client = GoogleAuthorization::Authorize(
 			Mode::Token,
-			null,
+			self::$credentialsFilePath,
 			null,
 			null,
 			'Google Drive API File Uploader',
