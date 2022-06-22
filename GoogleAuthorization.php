@@ -289,7 +289,7 @@ class GoogleAuthorization
 		if ($credentialsRequired === false ||
 			($credentialsFile !== null && file_exists($credentialsFile)))
 		{
-			$client = new Google_Client();
+			$client = new \Google_Client();
 
 			$client->setAccessType('offline');
 			$client->setApplicationName($name);
