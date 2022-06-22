@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace GoogleApiAuthorization;
+
 include_once 'vendor/autoload.php';
 
 enum Mode
