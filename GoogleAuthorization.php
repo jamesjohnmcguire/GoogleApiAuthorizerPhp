@@ -150,9 +150,12 @@ class GoogleAuthorization
 			$accessToken = self::AuthorizeTokenLocal($client);
 		}
 
-		$client = self::SetClient($credentialsFile, $name, $scopes);
-
-		$client = self::SetAccessToken($client, $accessToken, $tokensFilePath);
+		if ($accessToken !== null)
+		{
+			$client = self::SetClient($credentialsFile, $name, $scopes);
+			$client =
+				self::SetAccessToken($client, $accessToken, $tokensFilePath);
+		}
 
 		return $client;
 	}
