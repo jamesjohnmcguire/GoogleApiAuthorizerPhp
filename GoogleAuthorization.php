@@ -212,8 +212,8 @@ class GoogleAuthorization
 		return $authorizationCode;
 	}
 
-	private static function RequestAuthorization(
-		string $credentialsFile, $tokensFile, string $name, array $scopes)
+	private static function RequestAuthorization(?string $credentialsFile,
+		?string $tokensFile, ?string $name, ?array $scopes)
 	{
 		$client = null;
 
