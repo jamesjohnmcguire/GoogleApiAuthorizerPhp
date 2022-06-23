@@ -28,6 +28,10 @@ class GoogleAuthorization
 	{
 		$client = null;
 
+		$promptUser = true;
+
+		// Process options
+
 		switch ($mode)
 		{
 			case Mode::Discover:
@@ -52,6 +56,10 @@ class GoogleAuthorization
 				$client = self::AuthorizeOAuth(
 					$credentialsFile, $name, $scopes,$redirectUrl);
 				break;
+			case Mode::Request:
+				$client = self::RequestAuthorization(
+					$credentialsFile, $tokensFile, $name, $scopes);
+				break;
 			case Mode::ServiceAccount:
 				$client = self::AuthorizeServiceAccount(
 					$serviceAccountFile, $name, $scopes);
@@ -63,10 +71,18 @@ class GoogleAuthorization
 		}
 
 		// Final fall back, prompt user for confirmation code through web page
-		if ($client === null && PHP_SAPI === 'cli')
+		if ($client === null && $promptUser === true)
 		{
-			$client = self::RequestAuthorization(
-				$credentialsFile, $tokensFile, $name, $scopes);
+			if (PHP_SAPI === 'cli')
+			{
+				$client = self::RequestAuthorization(
+					$credentialsFile, $tokensFile, $name, $scopes);
+			}
+			else
+			{
+				$client = self::AuthorizeOAuth(
+					$credentialsFile, $name, $scopes,$redirectUrl);
+			}
 		}
 
 		return $client;
