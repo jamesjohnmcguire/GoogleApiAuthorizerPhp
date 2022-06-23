@@ -24,13 +24,21 @@ class GoogleAuthorization
 		?string $tokensFile,
 		?string $name,
 		?array $scopes,
-		?string $redirectUrl = null)
+		?string $redirectUrl = null,
+		?array $options = null)
 	{
 		$client = null;
 
 		$promptUser = true;
 
 		// Process options
+		if ($options !== null)
+		{
+			if (array_key_exists('promptUser', $options))
+			{
+				$promptUser = $options['promptUser'];
+			}
+		}
 
 		switch ($mode)
 		{
