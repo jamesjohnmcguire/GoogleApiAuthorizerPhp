@@ -30,6 +30,7 @@ class GoogleAuthorization
 		$client = null;
 
 		$promptUser = true;
+		$showWarnings = true;
 
 		// Process options
 		if ($options !== null)
@@ -37,6 +38,11 @@ class GoogleAuthorization
 			if (array_key_exists('promptUser', $options))
 			{
 				$promptUser = $options['promptUser'];
+			}
+
+			if (array_key_exists('showWarnings', $options))
+			{
+				$promptUser = $options['showWarnings'];
 			}
 		}
 
