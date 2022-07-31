@@ -9,9 +9,15 @@
 			"email": "jamesjohnmcguire@gmail.com"
 		}
 	],
+	"config": {
+		"vendor-dir": "SourceCode/vendor",
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
 	"require":
 	{
-        "google/apiclient": "^2.11"
+		"google/apiclient": "^2.11"
 	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "*",
