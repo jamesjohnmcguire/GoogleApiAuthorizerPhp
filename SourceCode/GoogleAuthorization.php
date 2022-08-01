@@ -117,7 +117,7 @@ class GoogleAuthorization
 				break;
 			case Mode::OAuth:
 				$client = self::AuthorizeOAuth(
-					$credentialsFile, $name, $scopes,$redirectUrl);
+					$credentialsFile, $name, $scopes, $redirectUrl);
 				break;
 			case Mode::Request:
 				$client = self::RequestAuthorization(
@@ -151,6 +151,18 @@ class GoogleAuthorization
 		return $client;
 	}
 
+	/**
+	 * Authorize by OAuth method.
+	 *
+	 * Main static method for OAuth authorization.
+	 *
+	 * @param ?string $credentialsFile The standard project credentials json file.
+	 * @param ?string $name            The name of the project requesting authorization.
+	 * @param ?array  $scopes          The requested scopes of the project.
+	 * @param ?string $redirectUrl     The URL which the authorization will complete to.
+	 *
+	 * @return ?object
+	 */
 	private static function AuthorizeOAuth(string $credentialsFile,
 		string $name, array $scopes, string $redirectUrl)
 	{
@@ -183,6 +195,17 @@ class GoogleAuthorization
 		return $client;
 	}
 
+	/**
+	 * Authorize by service account method.
+	 *
+	 * Main static method for service account authorization.
+	 *
+	 * @param ?string $serviceAccountFilePath The service account credentials json file.
+	 * @param ?string $name                   The name of the project requesting authorization.
+	 * @param ?array  $scopes                 The requested scopes of the project.
+	 *
+	 * @return ?object
+	 */
 	private static function AuthorizeServiceAccount(
 		$serviceAccountFilePath, $name, $scopes)
 	{
@@ -218,9 +241,21 @@ class GoogleAuthorization
 		return $client;
 	}
 
+	/**
+	 * Authorize by tokens method.
+	 *
+	 * Main static method for tokens authorization.
+	 *
+	 * @param ?string $credentialsFile The standard project credentials json file.
+	 * @param ?string $tokensFilePath  The tokens json file.
+	 * @param ?string $name            The name of the project requesting authorization.
+	 * @param ?array  $scopes          The requested scopes of the project.
+	 *
+	 * @return ?object
+	 */
 	private static function AuthorizeToken(
 		$credentialsFile, $tokensFilePath, $name, $scopes)
-	{	
+	{
 		$client = null;
 		$accessToken = self::AuthorizeTokenFile($client, $tokensFilePath);
 
@@ -239,7 +274,16 @@ class GoogleAuthorization
 		return $client;
 	}
 
-	private static function AuthorizeTokenLocal($client)
+	/**
+	 * Authorize by local tokens method.
+	 *
+	 * Static method for local tokens authorization.
+	 *
+	 * @param ?object $client The client object.
+	 *
+	 * @return ?array
+	 */
+	private static function AuthorizeTokenLocal(?object $client)
 	{
 		// last chance attempt of hard coded file name
 		$tokenFilePath = 'token.json';
@@ -249,6 +293,16 @@ class GoogleAuthorization
 		return $accessToken;
 	}
 
+	/**
+	 * Authorize by tokens method.
+	 *
+	 * Main static method for tokens authorization.
+	 *
+	 * @param ?object $client        The client object.
+	 * @param ?string $tokenFilePath The tokens json file.
+	 *
+	 * @return ?array
+	 */
 	private static function AuthorizeTokenFile($client, $tokenFilePath)
 	{
 		$accessToken = null;
@@ -267,7 +321,16 @@ class GoogleAuthorization
 		return $accessToken;
 	}
 
-	private static function IsValidJson($string)
+	/**
+	 * Is valid json method.
+	 *
+	 * Checks if the given string is in valid json format.
+	 *
+	 * @param ?string $string The string to check.
+	 *
+	 * @return bool
+	 */
+	private static function IsValidJson($string) : bool
 	{
 		$isValidJson = false;
 
@@ -280,10 +343,19 @@ class GoogleAuthorization
 		}
 
 		return $isValidJson;
-	 }
+	}
 
+	/**
+	 * Prompt for authorization code CLI method.
+	 *
+	 * Prompts the user the authorization code in the command line interface.
+	 *
+	 * @param ?string $authorizationUrl The authorization URL to use.
+	 *
+	 * @return string
+	 */
 	private static function PromptForAuthorizationCodeCli(
-		string $authorizationUrl)
+		string $authorizationUrl) : string
 	{
 		echo 'Open the following link in your browser:' . PHP_EOL;
 		echo $authorizationUrl . PHP_EOL;
@@ -294,8 +366,20 @@ class GoogleAuthorization
 		return $authorizationCode;
 	}
 
+	/**
+	 * Prompt for authorization code CLI method.
+	 *
+	 * Prompts the user the authorization code in the command line interface.
+	 *
+	 * @param ?string $credentialsFile The standard project credentials json file.
+	 * @param ?string $tokensFile      The tokens json file.
+	 * @param ?string $name            The name of the project requesting authorization.
+	 * @param ?array  $scopes          The requested scopes of the project.
+	 *
+	 * @return ?object
+	 */
 	private static function RequestAuthorization(?string $credentialsFile,
-		?string $tokensFile, ?string $name, ?array $scopes)
+		?string $tokensFile, ?string $name, ?array $scopes) : ?object
 	{
 		$client = null;
 
@@ -323,7 +407,19 @@ class GoogleAuthorization
 		return $client;
 	}
 
+	/**
+	 * Set access token method.
+	 *
+	 * Sets the access token in the client and stores the tokens in a file.
+	 *
+	 * @param ?object $client     The client object.
+	 * @param ?array  $tokens     The authorization URL to use.
+	 * @param ?string $tokensFile The tokens json file.
+	 *
+	 * @return ?object
+	 */
 	private static function SetAccessToken($client, $tokens, $tokensFile)
+		: ?object
 	{
 		$updatedClient = null;
 
@@ -360,8 +456,20 @@ class GoogleAuthorization
 		return $updatedClient;
 	}
 
+	/**
+	 * Set client method.
+	 *
+	 * Creates a new client object and sets default properties.
+	 *
+	 * @param ?string $credentialsFile     The standard project credentials json file.
+	 * @param ?string $name                The name of the project requesting authorization.
+	 * @param ?array  $scopes              The requested scopes of the project.
+	 * @param ?string $credentialsRequired The authorization URL to use.
+	 *
+	 * @return ?object
+	 */
 	private static function SetClient(?string $credentialsFile, string $name,
-		array $scopes, bool $credentialsRequired = true)
+		array $scopes, bool $credentialsRequired = true) : ?object
 	{
 		$client = null;
 
