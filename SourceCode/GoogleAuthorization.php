@@ -1,10 +1,33 @@
 <?php
+/**
+ * Google API Authorization Library
+ *
+ * Description: Google API Authorization Library.
+ * Version:     0.1.0
+ * Author:      James John McGuire
+ * Author URI:  http://www.digitalzenworks.com/
+
+ * @package   GoogleApiAuthorization
+ * @author    James John McGuire <jamesjohnmcguire@gmail.com>
+ * @copyright 2022 James John McGuire <jamesjohnmcguire@gmail.com>
+ * @license   MIT https://opensource.org/licenses/MIT
+ */
+
 declare(strict_types=1);
 
 namespace GoogleApiAuthorization;
 
-include_once 'vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
+/**
+ * The Mode enum.
+ *
+ * Contians all the modes of authorization.
+ *
+ * @package GoogleApiAuthorization;
+ * @author  James John McGuire <jamesjohnmcguire@gmail.com>
+ * @since   0.1.0
+ */
 enum Mode
 {
 	case None;
@@ -15,9 +38,35 @@ enum Mode
 	case Token;
 }
 
+
+/**
+ * GoogleAuthorization class.
+ *
+ * Contians all the core functionality for authorization.
+ *
+ * @package GoogleAuthorization
+ * @author  James John McGuire <jamesjohnmcguire@gmail.com>
+ * @since   0.1.0
+ */
 class GoogleAuthorization
 {
-	public static function Authorize (
+	/**
+	 * Authorize method.
+	 *
+	 * Main static method for authorization.
+	 *
+	 * @param Mode    $mode               The file to process.
+	 * @param ?string $credentialsFile    The standard project credentials json file.
+	 * @param ?string $serviceAccountFile The service account credentials json file.
+	 * @param ?string $tokensFile         The tokens json file.
+	 * @param ?string $name               The name of the project requesting authorization.
+	 * @param ?array  $scopes             The requested scopes of the project.
+	 * @param ?string $redirectUrl        The URL which the authorization will complete to.
+	 * @param ?array  $options            Additional options.
+	 *
+	 * @return ?object
+	 */
+	public static function Authorize(
 		Mode $mode,
 		?string $credentialsFile,
 		?string $serviceAccountFile,
@@ -25,7 +74,7 @@ class GoogleAuthorization
 		?string $name,
 		?array $scopes,
 		?string $redirectUrl = null,
-		?array $options = null)
+		?array $options = null) : ?object
 	{
 		$client = null;
 
@@ -95,7 +144,7 @@ class GoogleAuthorization
 			else
 			{
 				$client = self::AuthorizeOAuth(
-					$credentialsFile, $name, $scopes,$redirectUrl);
+					$credentialsFile, $name, $scopes, $redirectUrl);
 			}
 		}
 
