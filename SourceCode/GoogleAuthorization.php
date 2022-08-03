@@ -7,7 +7,9 @@
  * Version:     0.1.0
  * Author:      James John McGuire
  * Author URI:  http://www.digitalzenworks.com/
+ * PHP version  8.1.1
 
+ * @category  PHP
  * @package   GoogleApiAuthorization
  * @author    James John McGuire <jamesjohnmcguire@gmail.com>
  * @copyright 2022 James John McGuire <jamesjohnmcguire@gmail.com>
@@ -446,17 +448,21 @@ class GoogleAuthorization
 	 * @param ?string $credentialsFile     The standard project credentials json file.
 	 * @param ?string $name                The name of the project requesting authorization.
 	 * @param ?array  $scopes              The requested scopes of the project.
-	 * @param ?string $credentialsRequired The authorization URL to use.
+	 * @param bool    $credentialsRequired The authorization URL to use.
 	 *
 	 * @return ?object
 	 */
-	private static function SetClient(?string $credentialsFile, string $name,
-		array $scopes, bool $credentialsRequired = true) : ?object
+	private static function SetClient(
+		?string $credentialsFile,
+		string $name,
+		array $scopes,
+		bool $credentialsRequired = true):?object
 	{
 		$client = null;
 
-		if ($credentialsRequired === false ||
-			($credentialsFile !== null && file_exists($credentialsFile)))
+		$exists = file_exists($credentialsFile);
+
+		if ($credentialsRequired === false || $exists === true)
 		{
 			$client = new \Google_Client();
 
@@ -466,11 +472,11 @@ class GoogleAuthorization
 			$client->setScopes($scopes);
 		}
 
-		if ($credentialsFile !== null && file_exists($credentialsFile))
+		if ($exists === true)
 		{
 			$client->setAuthConfig($credentialsFile);
 		}
-		else if ($credentialsRequired === true)
+		elseif ($credentialsRequired === true)
 		{
 			echo 'credentials not found - can\'t create client' . PHP_EOL;
 		}
