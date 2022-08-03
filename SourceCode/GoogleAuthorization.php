@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Google API Authorization Library
  *
@@ -18,26 +19,7 @@ declare(strict_types=1);
 namespace GoogleApiAuthorization;
 
 require_once 'vendor/autoload.php';
-
-/**
- * The Mode enum.
- *
- * Contians all the modes of authorization.
- *
- * @package GoogleApiAuthorization;
- * @author  James John McGuire <jamesjohnmcguire@gmail.com>
- * @since   0.1.0
- */
-enum Mode
-{
-	case None;
-	case Discover;
-	case OAuth;
-	case Request;
-	case ServiceAccount;
-	case Token;
-}
-
+require_once 'Mode.php';
 
 /**
  * GoogleAuthorization class.
