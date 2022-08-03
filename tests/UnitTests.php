@@ -44,7 +44,7 @@ final class UnitTests extends TestCase
 
 	function testTokensFailNoCredentials()
 	{
-		$client = GoogleAuthorization::Authorize(
+		$client = GoogleAuthorization::authorize(
 			Mode::Token,
 			null,
 			null,
@@ -57,7 +57,7 @@ final class UnitTests extends TestCase
 
 	function testTokensFailNoTokens()
 	{
-		$client = GoogleAuthorization::Authorize(
+		$client = GoogleAuthorization::authorize(
 			Mode::Token,
 			self::$credentialsFilePath,
 			null,

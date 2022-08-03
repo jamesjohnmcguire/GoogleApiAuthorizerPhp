@@ -50,7 +50,7 @@ class GoogleAuthorization
 	 *
 	 * @return ?object
 	 */
-	public static function Authorize(
+	public static function authorize(
 		Mode $mode,
 		?string $credentialsFile,
 		?string $serviceAccountFile,
@@ -82,37 +82,37 @@ class GoogleAuthorization
 		switch ($mode)
 		{
 			case Mode::Discover:
-				$client = self::AuthorizeToken(
+				$client = self::authorizeToken(
 					$credentialsFile, $tokensFile, $name, $scopes);
 				
 				if ($client === null)
 				{
-					$client = self::AuthorizeServiceAccount(
+					$client = self::authorizeServiceAccount(
 						$serviceAccountFile, $name, $scopes);
 
 					// Http fall back, redirect user for confirmation
 					if ($client === null && PHP_SAPI !== 'cli')
 					{
-						$client = self::RequestAuthorization(
+						$client = self::requestAuthorization(
 							$credentialsFile, $tokensFile, $name, $scopes);
 					}
 					// else use final fall back
 				}
 				break;
 			case Mode::OAuth:
-				$client = self::AuthorizeOAuth(
+				$client = self::authorizeOAuth(
 					$credentialsFile, $name, $scopes, $redirectUrl);
 				break;
 			case Mode::Request:
-				$client = self::RequestAuthorization(
+				$client = self::requestAuthorization(
 					$credentialsFile, $tokensFile, $name, $scopes);
 				break;
 			case Mode::ServiceAccount:
-				$client = self::AuthorizeServiceAccount(
+				$client = self::authorizeServiceAccount(
 					$serviceAccountFile, $name, $scopes);
 				break;
 			case Mode::Token:
-				$client = self::AuthorizeToken(
+				$client = self::authorizeToken(
 					$credentialsFile, $tokensFile, $name, $scopes);
 				break;
 		}
@@ -122,12 +122,12 @@ class GoogleAuthorization
 		{
 			if (PHP_SAPI === 'cli')
 			{
-				$client = self::RequestAuthorization(
+				$client = self::requestAuthorization(
 					$credentialsFile, $tokensFile, $name, $scopes);
 			}
 			else
 			{
-				$client = self::AuthorizeOAuth(
+				$client = self::authorizeOAuth(
 					$credentialsFile, $name, $scopes, $redirectUrl);
 			}
 		}
@@ -147,8 +147,8 @@ class GoogleAuthorization
 	 *
 	 * @return ?object
 	 */
-	private static function AuthorizeOAuth(string $credentialsFile,
-		string $name, array $scopes, string $redirectUrl)
+	private static function authorizeOAuth(string $credentialsFile,
+		string $name, array $scopes, string $redirectUrl): ?object
 	{
 		$client = null;
 
@@ -158,7 +158,7 @@ class GoogleAuthorization
 		}
 		else
 		{
-			$client = self::SetClient($credentialsFile, $name, $scopes);
+			$client = self::setClient($credentialsFile, $name, $scopes);
 
 			$redirectUrl = filter_var($redirectUrl, FILTER_SANITIZE_URL);
 			$client->setRedirectUri($redirectUrl);
@@ -190,8 +190,8 @@ class GoogleAuthorization
 	 *
 	 * @return ?object
 	 */
-	private static function AuthorizeServiceAccount(
-		$serviceAccountFilePath, $name, $scopes)
+	private static function authorizeServiceAccount(
+		$serviceAccountFilePath, $name, $scopes): ?object
 	{
 		$client = null;
 
@@ -207,7 +207,7 @@ class GoogleAuthorization
 		if ($serviceAccountFilePath !== false &&
 			file_exists($serviceAccountFilePath))
 		{
-			$client = self::SetClient(null, $name, $scopes, false);
+			$client = self::setClient(null, $name, $scopes, false);
 
 			// nothing else to do... Google API will use
 			// GOOGLE_APPLICATION_CREDENTIALS file.
@@ -237,22 +237,22 @@ class GoogleAuthorization
 	 *
 	 * @return ?object
 	 */
-	private static function AuthorizeToken(
-		$credentialsFile, $tokensFilePath, $name, $scopes)
+	private static function authorizeToken(
+		$credentialsFile, $tokensFilePath, $name, $scopes): ?object
 	{
 		$client = null;
-		$accessToken = self::AuthorizeTokenFile($client, $tokensFilePath);
+		$accessToken = self::authorizeTokenFile($client, $tokensFilePath);
 
 		if ($accessToken === null)
 		{
-			$accessToken = self::AuthorizeTokenLocal($client);
+			$accessToken = self::authorizeTokenLocal($client);
 		}
 
 		if ($accessToken !== null)
 		{
-			$client = self::SetClient($credentialsFile, $name, $scopes);
+			$client = self::setClient($credentialsFile, $name, $scopes);
 			$client =
-				self::SetAccessToken($client, $accessToken, $tokensFilePath);
+				self::setAccessToken($client, $accessToken, $tokensFilePath);
 		}
 
 		return $client;
@@ -267,12 +267,12 @@ class GoogleAuthorization
 	 *
 	 * @return ?array
 	 */
-	private static function AuthorizeTokenLocal(?object $client)
+	private static function authorizeTokenLocal(?object $client): ?array
 	{
 		// last chance attempt of hard coded file name
 		$tokenFilePath = 'token.json';
 
-		$accessToken = self::AuthorizeTokenFile($client, $tokenFilePath);
+		$accessToken = self::authorizeTokenFile($client, $tokenFilePath);
 
 		return $accessToken;
 	}
@@ -287,7 +287,7 @@ class GoogleAuthorization
 	 *
 	 * @return ?array
 	 */
-	private static function AuthorizeTokenFile($client, $tokenFilePath)
+	private static function authorizeTokenFile($client, $tokenFilePath): ?array
 	{
 		$accessToken = null;
 
@@ -314,7 +314,7 @@ class GoogleAuthorization
 	 *
 	 * @return bool
 	 */
-	private static function IsValidJson($string) : bool
+	private static function isValidJson($string): bool
 	{
 		$isValidJson = false;
 
@@ -338,8 +338,8 @@ class GoogleAuthorization
 	 *
 	 * @return string
 	 */
-	private static function PromptForAuthorizationCodeCli(
-		string $authorizationUrl) : string
+	private static function promptForAuthorizationCodeCli(
+		string $authorizationUrl): string
 	{
 		echo 'Open the following link in your browser:' . PHP_EOL;
 		echo $authorizationUrl . PHP_EOL;
@@ -362,8 +362,8 @@ class GoogleAuthorization
 	 *
 	 * @return ?object
 	 */
-	private static function RequestAuthorization(?string $credentialsFile,
-		?string $tokensFile, ?string $name, ?array $scopes) : ?object
+	private static function requestAuthorization(?string $credentialsFile,
+		?string $tokensFile, ?string $name, ?array $scopes): ?object
 	{
 		$client = null;
 
@@ -374,17 +374,17 @@ class GoogleAuthorization
 		}
 		else
 		{
-			$client = self::SetClient($credentialsFile, $name, $scopes);
+			$client = self::setClient($credentialsFile, $name, $scopes);
 
 			if ($client !== null)
 			{
 				$authorizationUrl = $client->createAuthUrl();
 				$authorizationCode =
-					self::PromptForAuthorizationCodeCli($authorizationUrl);
+					self::promptForAuthorizationCodeCli($authorizationUrl);
 		
 				$accessToken =
 					$client->fetchAccessTokenWithAuthCode($authorizationCode);
-				$client = self::SetAccessToken($client, $accessToken, $tokensFile);
+				$client = self::setAccessToken($client, $accessToken, $tokensFile);
 			}
 		}
 
@@ -402,7 +402,7 @@ class GoogleAuthorization
 	 *
 	 * @return ?object
 	 */
-	private static function SetAccessToken($client, $tokens, $tokensFile)
+	private static function setAccessToken($client, $tokens, $tokensFile)
 		: ?object
 	{
 		$updatedClient = null;
@@ -452,11 +452,11 @@ class GoogleAuthorization
 	 *
 	 * @return ?object
 	 */
-	private static function SetClient(
+	private static function setClient(
 		?string $credentialsFile,
 		string $name,
 		array $scopes,
-		bool $credentialsRequired = true):?object
+		bool $credentialsRequired = true): ?object
 	{
 		$client = null;
 
