@@ -83,6 +83,59 @@ class GoogleAuthorization
 			}
 		}
 
+		$client = self::authorizeByMode(
+			$mode,
+			$credentialsFile,
+			$serviceAccountFile,
+			$tokensFile,
+			$name,
+			$scopes,
+			$redirectUrl);
+
+		// Final fall back, prompt user for confirmation code through web page.
+		$client = self::finalFallBack(
+			$client,
+			$credentialsFile,
+			$tokensFile,
+			$name,
+			$scopes,
+			$redirectUrl,
+			$promptUser);
+
+		return $client;
+	}
+
+	/**
+	 * Authorize by mode method.
+	 *
+	 * Main sub method for authorization.
+	 *
+	 * @param Mode   $mode               The file to process.
+	 * @param string $credentialsFile    The standard project credentials json
+	 *                                   file.
+	 * @param string $serviceAccountFile The service account credentials json
+	 *                                   file.
+	 * @param string $tokensFile         The tokens json file.
+	 * @param string $name               The name of the project requesting
+	 *                                   authorization.
+	 * @param array  $scopes             The requested scopes of the project.
+	 * @param string $redirectUrl        The URL which the authorization will
+	 *                                   complete to.
+	 * @param array  $options            Additional options.
+	 *
+	 * @return ?object
+	 */
+	private static function authorizeByMode(
+		Mode $mode,
+		?string $credentialsFile,
+		?string $serviceAccountFile,
+		?string $tokensFile,
+		?string $name,
+		?array $scopes,
+		?string $redirectUrl = null): ?object
+	{
+		$client = null;
+
 		switch ($mode)
 		{
 			case Mode::Discover:
@@ -141,27 +194,6 @@ class GoogleAuthorization
 			default:
 				// Use final fall back.
 				break;
-		}
-
-		// Final fall back, prompt user for confirmation code through web page.
-		if ($client === null && $promptUser === true)
-		{
-			if (PHP_SAPI === 'cli')
-			{
-				$client = self::requestAuthorization(
-					$credentialsFile,
-					$tokensFile,
-					$name,
-					$scopes);
-			}
-			else
-			{
-				$client = self::authorizeOauth(
-					$credentialsFile,
-					$name,
-					$scopes,
-					$redirectUrl);
-			}
 		}
 
 		return $client;
@@ -353,6 +385,57 @@ class GoogleAuthorization
 		}
 
 		return $accessToken;
+	}
+
+	/**
+	 * Final fall back authorization method.
+	 *
+	 * Last change method for authorization, usually requiring user interaction.
+	 *
+	 * @param object  $client          The client object.
+	 * @param string  $credentialsFile The standard project credentials json
+	 *                                 file.
+	 * @param string  $tokensFile      The tokens json file.
+	 * @param string  $name            The name of the project requesting
+	 *                                 authorization.
+	 * @param array   $scopes          The requested scopes of the project.
+	 * @param string  $redirectUrl     The URL which the authorization will
+	 *                                 complete to.
+	 * @param boolean $promptUser      Indicates whether to prompt the user to
+	 *                                 continue.
+	 *
+	 * @return ?object
+	 */
+	private static function finalFallBack(
+		?object $client,
+		?string $credentialsFile,
+		?string $tokensFile,
+		?string $name,
+		?array $scopes,
+		?string $redirectUrl,
+		bool $promptUser)
+	{
+		if ($client === null && $promptUser === true)
+		{
+			if (PHP_SAPI === 'cli')
+			{
+				$client = self::requestAuthorization(
+					$credentialsFile,
+					$tokensFile,
+					$name,
+					$scopes);
+			}
+			else
+			{
+				$client = self::authorizeOauth(
+					$credentialsFile,
+					$name,
+					$scopes,
+					$redirectUrl);
+			}
+		}
+
+		return $client;
 	}
 
 	/**
