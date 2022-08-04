@@ -1,5 +1,5 @@
 SourceCode/vendor/
 
-SourceCode/credentials.json
-SourceCode/ServiceAccount.json
-SourceCode/tokens.json
+credentials.json
+ServiceAccount.json
+tokens.json
