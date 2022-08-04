@@ -50,7 +50,9 @@ final class UnitTests extends TestCase
 			null,
 			null,
 			'Google Drive API File Uploader',
-			['https://www.googleapis.com/auth/drive']);
+			['https://www.googleapis.com/auth/drive'],
+			null,
+			['promptUser' => false]);
 	
 		$this->assertNull($client);
 	}
@@ -63,8 +65,23 @@ final class UnitTests extends TestCase
 			null,
 			null,
 			'Google Drive API File Uploader',
-			['https://www.googleapis.com/auth/drive']);
+			['https://www.googleapis.com/auth/drive'],
+			null,
+			['promptUser' => false]);
 	
 		$this->assertNull($client);
+	}
+
+	function testTokensSuccess()
+	{
+		$client = GoogleAuthorization::authorize(
+			Mode::Token,
+			self::$credentialsFilePath,
+			null,
+			'tokens.json',
+			'Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive']);
+	
+		$this->assertNotNull($client);
 	}
 }
