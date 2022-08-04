@@ -1,8 +1,8 @@
 <?php
 
 declare(strict_types=1);
-namespace GoogleAuthorization\Tests;
 
+namespace GoogleAuthorization\Tests;
 
 $root = dirname(__DIR__, 1);
 
@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 final class UnitTests extends TestCase
 {
-	protected static ?string $credentialsFilePath = null;
+	protected ?string $credentialsFilePath = 'credentials.json';
 
 	public function setUp() : void
 	{
@@ -42,7 +42,7 @@ final class UnitTests extends TestCase
 		$this->assertTrue($result);
 	}
 
-	function testTokensFailNoCredentials()
+	public function testTokensFailNoCredentials()
 	{
 		$client = GoogleAuthorization::authorize(
 			Mode::Token,
@@ -57,11 +57,11 @@ final class UnitTests extends TestCase
 		$this->assertNull($client);
 	}
 
-	function testTokensFailNoTokens()
+	public function testTokensFailNoTokens()
 	{
 		$client = GoogleAuthorization::authorize(
 			Mode::Token,
-			self::$credentialsFilePath,
+			$this->credentialsFilePath,
 			null,
 			null,
 			'Google Drive API File Uploader',
@@ -72,16 +72,28 @@ final class UnitTests extends TestCase
 		$this->assertNull($client);
 	}
 
-	function testTokensSuccess()
+	public function testTokensSuccess()
 	{
 		$client = GoogleAuthorization::authorize(
 			Mode::Token,
-			self::$credentialsFilePath,
+			$this->credentialsFilePath,
 			null,
 			'tokens.json',
 			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive']);
 	
 		$this->assertNotNull($client);
+
+		$service = new \Google_Service_Drive($client);
+		$about = $service->about;
+
+		$options =
+		[
+			'fields' => 'storageQuota',
+			'prettyPrint' => true
+		];
+
+		$response = $about->get($options);
+		$this->assertNotNull($response);
 	}
 }
