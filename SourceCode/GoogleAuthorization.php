@@ -322,7 +322,7 @@ class GoogleAuthorization
 		?array $scopes): ?object
 	{
 		$client = null;
-		$accessToken = self::authorizeTokenFile($client, $tokensFilePath);
+		$accessToken = self::authorizeTokenFile($tokensFilePath);
 
 		if ($accessToken === null)
 		{
@@ -353,7 +353,7 @@ class GoogleAuthorization
 		// Last chance attempt of hard coded file name.
 		$tokenFilePath = 'token.json';
 
-		$accessToken = self::authorizeTokenFile($client, $tokenFilePath);
+		$accessToken = self::authorizeTokenFile($tokenFilePath);
 
 		return $accessToken;
 	}
@@ -370,15 +370,20 @@ class GoogleAuthorization
 	private static function authorizeTokenFile(?string $tokenFilePath): ?array
 	{
 		$accessToken = null;
+		$exists = false;
 
-		$exists = file_exists($tokenFilePath);
-
-		if ($tokenFilePath !== null && $exists === true)
+		if ($tokenFilePath !== null)
 		{
-			$fileContents = file_get_contents($tokenFilePath);
-			$accessToken = json_decode($fileContents, true);
+			$exists = file_exists($tokenFilePath);
+
+			if ($exists === true)
+			{
+				$fileContents = file_get_contents($tokenFilePath);
+				$accessToken = json_decode($fileContents, true);
+			}
 		}
-		else
+
+		if ($exists === false)
 		{
 			echo 'WARNING: token file doesn\'t exist - ' . $tokenFilePath .
 				PHP_EOL;
@@ -609,17 +614,18 @@ class GoogleAuthorization
 		bool $credentialsRequired = true): ?object
 	{
 		$client = null;
+		$exists = false;
 
-		$exists = file_exists($credentialsFile);
+		$client = new \Google_Client();
 
-		if ($credentialsRequired === false || $exists === true)
+		$client->setAccessType('offline');
+		$client->setApplicationName($name);
+		$client->setPrompt('select_account consent');
+		$client->setScopes($scopes);
+
+		if ($credentialsFile !== null)
 		{
-			$client = new \Google_Client();
-
-			$client->setAccessType('offline');
-			$client->setApplicationName($name);
-			$client->setPrompt('select_account consent');
-			$client->setScopes($scopes);
+			$exists = file_exists($credentialsFile);
 		}
 
 		if ($exists === true)
@@ -628,7 +634,7 @@ class GoogleAuthorization
 		}
 		elseif ($credentialsRequired === true)
 		{
-			echo 'credentials not found - can\'t create client' . PHP_EOL;
+			echo 'credentials not found' . PHP_EOL;
 		}
 
 		return $client;
