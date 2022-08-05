@@ -95,5 +95,7 @@ final class UnitTests extends TestCase
 
 		$response = $about->get($options);
 		$this->assertNotNull($response);
+
+		$this->assertInstanceOf('Google\Service\Drive\About', $response);
 	}
 }
