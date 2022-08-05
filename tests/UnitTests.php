@@ -52,7 +52,7 @@ final class UnitTests extends TestCase
 			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive'],
 			null,
-			['promptUser' => false]);
+			['promptUser' => false, 'showWarnings' => false]);
 	
 		$this->assertNull($client);
 	}
@@ -67,7 +67,7 @@ final class UnitTests extends TestCase
 			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive'],
 			null,
-			['promptUser' => false]);
+			['promptUser' => false, 'showWarnings' => false]);
 	
 		$this->assertNull($client);
 	}
