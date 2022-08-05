@@ -386,14 +386,11 @@ class GoogleAuthorization
 	 *
 	 * Static method for local tokens authorization.
 	 *
-	 * @param object  $client       The client object.
 	 * @param boolean $showWarnings Indicates whether to output warnings or not.
 	 *
 	 * @return ?array
 	 */
-	private static function authorizeTokenLocal(
-		?object $client,
-		bool $showWarnings): ?array
+	private static function authorizeTokenLocal(bool $showWarnings): ?array
 	{
 		// Last chance attempt of hard coded file name.
 		$tokenFilePath = 'token.json';
