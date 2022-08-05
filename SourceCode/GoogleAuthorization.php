@@ -249,6 +249,7 @@ class GoogleAuthorization
 				$credentialsFile,
 				$name,
 				$scopes,
+				true,
 				$showWarnings);
 
 			$redirectUrl = filter_var($redirectUrl, FILTER_SANITIZE_URL);
@@ -367,6 +368,7 @@ class GoogleAuthorization
 				$credentialsFile,
 				$name,
 				$scopes,
+				true,
 				$showWarnings);
 
 			$client = self::setAccessToken(
@@ -576,6 +578,7 @@ class GoogleAuthorization
 				$credentialsFile,
 				$name,
 				$scopes,
+				true,
 				$showWarnings);
 
 			if ($client !== null)
@@ -674,7 +677,7 @@ class GoogleAuthorization
 		?string $credentialsFile,
 		string $name,
 		array $scopes,
-		bool $credentialsRequired = true,
+		bool $credentialsRequired,
 		bool $showWarnings): ?object
 	{
 		$client = null;
