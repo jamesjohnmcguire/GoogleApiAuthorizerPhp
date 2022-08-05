@@ -134,7 +134,7 @@ class GoogleAuthorization
 		?string $tokensFile,
 		?string $name,
 		?array $scopes,
-		?string $redirectUrl = null,
+		?string $redirectUrl,
 		bool $showWarnings): ?object
 	{
 		$client = null;
@@ -359,7 +359,7 @@ class GoogleAuthorization
 
 		if ($accessToken === null)
 		{
-			$accessToken = self::authorizeTokenLocal($client, $showWarnings);
+			$accessToken = self::authorizeTokenLocal($showWarnings);
 		}
 
 		if ($accessToken !== null)
