@@ -614,24 +614,27 @@ class GoogleAuthorization
 	{
 		$updatedClient = null;
 
-		$isArray = is_array($tokens);
-		$errorExists = array_key_exists('error', $tokens);
-
-		if ($isArray === true && $errorExists === false)
+		if ($tokens !== null)
 		{
-			$client->setAccessToken($tokens);
-			$updatedClient = $client;
+			$isArray = is_array($tokens);
+			$errorExists = array_key_exists('error', $tokens);
 
-			$json = json_encode($tokens);
-
-			$isEmpty = empty($tokensFile);
-
-			if ($isEmpty === false)
+			if ($isArray === true && $errorExists === false)
 			{
-				file_put_contents($tokensFile, $json);
+				$client->setAccessToken($tokens);
+				$updatedClient = $client;
+
+				$json = json_encode($tokens);
+
+				$isEmpty = empty($tokensFile);
+
+				if ($isEmpty === false)
+				{
+					file_put_contents($tokensFile, $json);
+				}
 			}
 		}
-		elseif ($showWarnings === true)
+		elseif ($updatedClient === null && $showWarnings === true)
 		{
 			if ($tokens === null)
 			{
