@@ -1,0 +1,3 @@
+Tasks
+	Make consistent: tokensFilePath, tokenFilePath, tokensFile
+	Code styles on unit tests?
