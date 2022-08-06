@@ -1,12 +1,17 @@
 <?php
 declare(strict_types=1);
 
-include_once '../vendor/autoload.php';
-require_once '../GoogleAuthorization.php';
+$root = dirname(__DIR__, 1);
+
+include_once $root . '/SourceCode/vendor/autoload.php';
+require_once $root . '/SourceCode/GoogleAuthorization.php';
+
+use GoogleApiAuthorization\GoogleAuthorization;
+use GoogleApiAuthorization\Mode;
 
 function TestDiscover()
 {
-	$client = GoogleAuthorization::Authorize(
+	$client = GoogleAuthorization::authorize(
 		Mode::Discover,
 		'',
 		'credentials.json',
@@ -17,7 +22,20 @@ function TestDiscover()
 
 	if ($client != null)
 	{
-		echo 'Client seems valid' . PHP_EOL;
+		$service = new \Google_Service_Drive($client);
+		$about = $service->about;
+
+		$options =
+		[
+			'fields' => 'storageQuota',
+			'prettyPrint' => true
+		];
+
+		$response = $about->get($options);
+		if ($response !== null)
+		{
+			echo 'Client seems valid' . PHP_EOL;
+		}
 	}
 }
 
@@ -33,7 +51,7 @@ function TestOauth()
 	}
 	else
 	{
-		$client = GoogleAuthorization::Authorize(
+		$client = GoogleAuthorization::authorize(
 			Mode::OAuth,
 			'',
 			'credentials.json',
@@ -45,7 +63,20 @@ function TestOauth()
 
 	if ($client !== null)
 	{
-		echo 'Client seems valid' . PHP_EOL;
+		$service = new \Google_Service_Drive($client);
+		$about = $service->about;
+
+		$options =
+		[
+			'fields' => 'storageQuota',
+			'prettyPrint' => true
+		];
+
+		$response = $about->get($options);
+		if ($response !== null)
+		{
+			echo 'Client seems valid' . PHP_EOL;
+		}
 	}
 }
 
@@ -90,23 +121,56 @@ function TestRawRequestUser()
 		$credentialsFile = 'cretentials_new.json';
 		echo "Saving to file: " . $credentialsFile . PHP_EOL;
 		file_put_contents($credentialsFile, $json);
+
+		$service = new \Google_Service_Drive($client);
+		$about = $service->about;
+
+		$options =
+		[
+			'fields' => 'storageQuota',
+			'prettyPrint' => true
+		];
+
+		$response = $about->get($options);
+		if ($response !== null)
+		{
+			echo 'Client seems valid' . PHP_EOL;
+		}
 	}
 }
 
 function TestRequestUser()
 {
-	GoogleAuthorization::Authorize(
+	$client = GoogleAuthorization::authorize(
 		Mode::Request,
 		'',
 		'credentials.json',
 		'tokens.json',
 		'Google Drive API File Uploader',
 		['https://www.googleapis.com/auth/drive']);
+
+	if ($client != null)
+	{
+		$service = new \Google_Service_Drive($client);
+		$about = $service->about;
+
+		$options =
+		[
+			'fields' => 'storageQuota',
+			'prettyPrint' => true
+		];
+
+		$response = $about->get($options);
+		if ($response !== null)
+		{
+			echo 'Client seems valid' . PHP_EOL;
+		}
+	}
 }
 
 function TestServiceAccount($serviceAccountFilePath)
 {
-	$client = GoogleAuthorization::Authorize(
+	$client = GoogleAuthorization::authorize(
 		Mode::ServiceAccount,
 		'',
 		$serviceAccountFilePath,
@@ -116,7 +180,20 @@ function TestServiceAccount($serviceAccountFilePath)
 
 	if ($client != null)
 	{
-		echo 'Client seems valid' . PHP_EOL;
+		$service = new \Google_Service_Drive($client);
+		$about = $service->about;
+
+		$options =
+		[
+			'fields' => 'storageQuota',
+			'prettyPrint' => true
+		];
+
+		$response = $about->get($options);
+		if ($response !== null)
+		{
+			echo 'Client seems valid' . PHP_EOL;
+		}
 	}
 }
 
@@ -124,17 +201,30 @@ function TestTokens($credentialsFilePath, $tokensFilePath)
 {
 	echo 'Testing Tokens...' . PHP_EOL;
 
-	$client = GoogleAuthorization::Authorize(
+	$client = GoogleAuthorization::authorize(
 		Mode::Token,
 		$credentialsFilePath,
 		null,
-		$tokensFilePath,
+		null,
 		'Google Drive API File Uploader',
 		['https://www.googleapis.com/auth/drive']);
 
 	if ($client != null)
 	{
-		echo 'Client seems valid' . PHP_EOL;
+		$service = new \Google_Service_Drive($client);
+		$about = $service->about;
+
+		$options =
+		[
+			'fields' => 'storageQuota',
+			'prettyPrint' => true
+		];
+
+		$response = $about->get($options);
+		if ($response !== null)
+		{
+			echo 'Client seems valid' . PHP_EOL;
+		}
 	}
 }
 
