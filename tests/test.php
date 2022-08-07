@@ -173,7 +173,7 @@ function TestServiceAccount($serviceAccountFilePath)
 	$client = GoogleAuthorization::authorize(
 		Mode::ServiceAccount,
 		'',
-		$serviceAccountFilePath,
+		null,
 		'',
 		'Google Drive API File Uploader',
 		['https://www.googleapis.com/auth/drive']);

@@ -16,6 +16,8 @@ use PHPUnit\Framework\TestCase;
 final class UnitTests extends TestCase
 {
 	protected ?string $credentialsFilePath = 'credentials.json';
+	protected ?string $serviceAccountFilePath = 'ServiceAccount.json';
+	protected ?string $tokensFilePath = 'tokens.json';
 
 	public function setUp() : void
 	{
@@ -40,6 +42,35 @@ final class UnitTests extends TestCase
 		$result = true;
 
 		$this->assertTrue($result);
+	}
+
+	public function testServiceAccountSuccess()
+	{
+		$client = GoogleAuthorization::authorize(
+			Mode::ServiceAccount,
+			null,
+			$this->serviceAccountFilePath,
+			null,
+			'Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			null,
+			['promptUser' => false, 'showWarnings' => false]);
+	
+		$this->assertNotNull($client);
+
+		$service = new \Google_Service_Drive($client);
+		$about = $service->about;
+
+		$options =
+		[
+			'fields' => 'storageQuota',
+			'prettyPrint' => true
+		];
+
+		$response = $about->get($options);
+		$this->assertNotNull($response);
+
+		$this->assertInstanceOf('Google\Service\Drive\About', $response);
 	}
 
 	public function testTokensFailNoCredentials()
@@ -78,7 +109,7 @@ final class UnitTests extends TestCase
 			Mode::Token,
 			$this->credentialsFilePath,
 			null,
-			'tokens.json',
+			$this->tokensFilePath,
 			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive']);
 	
