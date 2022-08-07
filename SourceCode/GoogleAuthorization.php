@@ -296,16 +296,28 @@ class GoogleAuthorization
 		bool $showWarnings): ?object
 	{
 		$client = null;
+		$exists = false;
 
-		$exists = file_exists($serviceAccountFilePath);
-
-		if ($serviceAccountFilePath !== null && $exists === true)
+		if ($serviceAccountFilePath !== null)
 		{
-			$serviceAccountFilePath = realpath($serviceAccountFilePath);
-			putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $serviceAccountFilePath);
+			$exists = file_exists($serviceAccountFilePath);
+
+			if ($exists === true)
+			{
+				$serviceAccountFilePath = realpath($serviceAccountFilePath);
+				putenv('GOOGLE_APPLICATION_CREDENTIALS=' .
+					$serviceAccountFilePath);
+			}
 		}
 
+		// Even if specified file in variable is invalid, perhaps environment
+		// variable ok.
 		$serviceAccountFilePath = getenv('GOOGLE_APPLICATION_CREDENTIALS');
+
+		if ($serviceAccountFilePath !== false)
+		{
+			$exists = file_exists($serviceAccountFilePath);
+		}
 
 		if ($serviceAccountFilePath !== false && $exists === true)
 		{
@@ -683,21 +695,24 @@ class GoogleAuthorization
 		$client = null;
 		$exists = false;
 
-		$client = new \Google_Client();
-
-		$client->setAccessType('offline');
-		$client->setApplicationName($name);
-		$client->setPrompt('select_account consent');
-		$client->setScopes($scopes);
-
 		if ($credentialsFile !== null)
 		{
 			$exists = file_exists($credentialsFile);
 		}
 
-		if ($exists === true)
+		if ($credentialsRequired === false || $exists === true)
 		{
-			$client->setAuthConfig($credentialsFile);
+			$client = new \Google_Client();
+
+			$client->setAccessType('offline');
+			$client->setApplicationName($name);
+			$client->setPrompt('select_account consent');
+			$client->setScopes($scopes);
+	
+			if ($exists === true)
+			{
+				$client->setAuthConfig($credentialsFile);
+			}
 		}
 		elseif ($credentialsRequired === true && $showWarnings === true)
 		{
