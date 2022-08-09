@@ -37,26 +37,27 @@ class GoogleAuthorization
 	 *
 	 * Main static method for authorization.
 	 *
-	 * @param Mode   $mode               The file to process.
-	 * @param string $credentialsFile    The standard project credentials json
-	 *                                   file.
-	 * @param string $serviceAccountFile The service account credentials json
-	 *                                   file.
-	 * @param string $tokensFile         The tokens json file.
-	 * @param string $name               The name of the project requesting
-	 *                                   authorization.
-	 * @param array  $scopes             The requested scopes of the project.
-	 * @param string $redirectUrl        The URL which the authorization will
-	 *                                   complete to.
-	 * @param array  $options            Additional options.
+	 * @param Mode   $mode                   The file to process.
+	 * @param string $credentialsFilePath    The standard project credentials
+	 *                                       json file.
+	 * @param string $serviceAccountFilePath The service account credentials
+	 *                                       json file.
+	 * @param string $tokensFilePath         The tokens json file.
+	 * @param string $name                   The name of the project requesting
+	 *                                       authorization.
+	 * @param array  $scopes                 The requested scopes of the
+	 *                                       project.
+	 * @param string $redirectUrl            The URL which the authorization
+	 *                                       will complete to.
+	 * @param array  $options                Additional options.
 	 *
 	 * @return ?object
 	 */
 	public static function authorize(
 		Mode $mode,
-		?string $credentialsFile,
-		?string $serviceAccountFile,
-		?string $tokensFile,
+		?string $credentialsFilePath,
+		?string $serviceAccountFilePath,
+		?string $tokensFilePath,
 		?string $name,
 		?array $scopes,
 		?string $redirectUrl = null,
@@ -85,9 +86,9 @@ class GoogleAuthorization
 
 		$client = self::authorizeByMode(
 			$mode,
-			$credentialsFile,
-			$serviceAccountFile,
-			$tokensFile,
+			$credentialsFilePath,
+			$serviceAccountFilePath,
+			$tokensFilePath,
 			$name,
 			$scopes,
 			$redirectUrl,
@@ -96,8 +97,8 @@ class GoogleAuthorization
 		// Final fall back, prompt user for confirmation code through web page.
 		$client = self::finalFallBack(
 			$client,
-			$credentialsFile,
-			$tokensFile,
+			$credentialsFilePath,
+			$tokensFilePath,
 			$name,
 			$scopes,
 			$redirectUrl,
@@ -111,27 +112,28 @@ class GoogleAuthorization
 	 *
 	 * Main sub method for authorization.
 	 *
-	 * @param Mode    $mode               The file to process.
-	 * @param string  $credentialsFile    The standard project credentials json
-	 *                                    file.
-	 * @param string  $serviceAccountFile The service account credentials json
-	 *                                    file.
-	 * @param string  $tokensFile         The tokens json file.
-	 * @param string  $name               The name of the project requesting
-	 *                                    authorization.
-	 * @param array   $scopes             The requested scopes of the project.
-	 * @param string  $redirectUrl        The URL which the authorization will
-	 *                                    complete to.
-	 * @param boolean $showWarnings       Indicates whether to output warnings
-	 *                                    or not.
+	 * @param Mode    $mode                   The file to process.
+	 * @param string  $credentialsFilePath    The standard project credentials
+	 *                                        json file.
+	 * @param string  $serviceAccountFilePath The service account credentials
+	 *                                        file.
+	 * @param string  $tokensFilePath         The tokens json file.
+	 * @param string  $name                   The name of the project requesting
+	 *                                        authorization.
+	 * @param array   $scopes                 The requested scopes of the
+	 *                                        project.
+	 * @param string  $redirectUrl            The URL which the authorization
+	 *                                        will complete to.
+	 * @param boolean $showWarnings           Indicates whether to output
+	 *                                        warnings or not.
 	 *
 	 * @return ?object
 	 */
 	private static function authorizeByMode(
 		Mode $mode,
-		?string $credentialsFile,
-		?string $serviceAccountFile,
-		?string $tokensFile,
+		?string $credentialsFilePath,
+		?string $serviceAccountFilePath,
+		?string $tokensFilePath,
 		?string $name,
 		?array $scopes,
 		?string $redirectUrl,
@@ -143,8 +145,8 @@ class GoogleAuthorization
 		{
 			case Mode::Discover:
 				$client = self::authorizeToken(
-					$credentialsFile,
-					$tokensFile,
+					$credentialsFilePath,
+					$tokensFilePath,
 					$name,
 					$scopes,
 					$showWarnings);
@@ -152,7 +154,7 @@ class GoogleAuthorization
 				if ($client === null)
 				{
 					$client = self::authorizeServiceAccount(
-						$serviceAccountFile,
+						$serviceAccountFilePath,
 						$name,
 						$scopes,
 						$showWarnings);
@@ -161,8 +163,8 @@ class GoogleAuthorization
 					if ($client === null && PHP_SAPI !== 'cli')
 					{
 						$client = self::requestAuthorization(
-							$credentialsFile,
-							$tokensFile,
+							$credentialsFilePath,
+							$tokensFilePath,
 							$name,
 							$scopes,
 							$showWarnings);
@@ -172,7 +174,7 @@ class GoogleAuthorization
 				break;
 			case Mode::OAuth:
 				$client = self::authorizeOauth(
-					$credentialsFile,
+					$credentialsFilePath,
 					$name,
 					$scopes,
 					$redirectUrl,
@@ -180,23 +182,23 @@ class GoogleAuthorization
 				break;
 			case Mode::Request:
 				$client = self::requestAuthorization(
-					$credentialsFile,
-					$tokensFile,
+					$credentialsFilePath,
+					$tokensFilePath,
 					$name,
 					$scopes,
 					$showWarnings);
 				break;
 			case Mode::ServiceAccount:
 				$client = self::authorizeServiceAccount(
-					$serviceAccountFile,
+					$serviceAccountFilePath,
 					$name,
 					$scopes,
 					$showWarnings);
 				break;
 			case Mode::Token:
 				$client = self::authorizeToken(
-					$credentialsFile,
-					$tokensFile,
+					$credentialsFilePath,
+					$tokensFilePath,
 					$name,
 					$scopes,
 					$showWarnings);
@@ -214,20 +216,20 @@ class GoogleAuthorization
 	 *
 	 * Main static method for OAuth authorization.
 	 *
-	 * @param string  $credentialsFile The standard project credentials json
-	 *                                 file.
-	 * @param string  $name            The name of the project requesting
-	 *                                 authorization.
-	 * @param array   $scopes          The requested scopes of the project.
-	 * @param string  $redirectUrl     The URL which the authorization will
-	 *                                 complete to.
-	 * @param boolean $showWarnings    Indicates whether to output warnings
-	 *                                 or not.
+	 * @param string  $credentialsFilePath The standard project credentials json
+	 *                                     file.
+	 * @param string  $name                The name of the project requesting
+	 *                                     authorization.
+	 * @param array   $scopes              The requested scopes of the project.
+	 * @param string  $redirectUrl         The URL which the authorization will
+	 *                                     complete to.
+	 * @param boolean $showWarnings        Indicates whether to output warnings
+	 *                                     or not.
 	 *
 	 * @return ?object
 	 */
 	private static function authorizeOauth(
-		?string $credentialsFile,
+		?string $credentialsFilePath,
 		?string $name,
 		?array $scopes,
 		?string $redirectUrl,
@@ -246,7 +248,7 @@ class GoogleAuthorization
 		else
 		{
 			$client = self::setClient(
-				$credentialsFile,
+				$credentialsFilePath,
 				$name,
 				$scopes,
 				true,
@@ -305,8 +307,9 @@ class GoogleAuthorization
 			if ($exists === true)
 			{
 				$serviceAccountFilePath = realpath($serviceAccountFilePath);
-				putenv('GOOGLE_APPLICATION_CREDENTIALS=' .
-					$serviceAccountFilePath);
+				$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS=' .
+					$serviceAccountFilePath;
+				putenv($environmentVariable);
 			}
 		}
 
@@ -348,19 +351,19 @@ class GoogleAuthorization
 	 *
 	 * Main static method for tokens authorization.
 	 *
-	 * @param string  $credentialsFile The standard project credentials json
-	 *                                 file.
-	 * @param string  $tokensFilePath  The tokens json file.
-	 * @param string  $name            The name of the project requesting
-	 *                                 authorization.
-	 * @param array   $scopes          The requested scopes of the project.
-	 * @param boolean $showWarnings    Indicates whether to output
-	 *                                 warnings or not.
+	 * @param string  $credentialsFilePath The standard project credentials json
+	 *                                     file.
+	 * @param string  $tokensFilePath      The tokens json file.
+	 * @param string  $name                The name of the project requesting
+	 *                                     authorization.
+	 * @param array   $scopes              The requested scopes of the project.
+	 * @param boolean $showWarnings        Indicates whether to output
+	 *                                     warnings or not.
 	 *
 	 * @return ?object
 	 */
 	private static function authorizeToken(
-		?string $credentialsFile,
+		?string $credentialsFilePath,
 		?string $tokensFilePath,
 		?string $name,
 		?array $scopes,
@@ -377,7 +380,7 @@ class GoogleAuthorization
 		if ($accessToken !== null)
 		{
 			$client = self::setClient(
-				$credentialsFile,
+				$credentialsFilePath,
 				$name,
 				$scopes,
 				true,
@@ -417,33 +420,33 @@ class GoogleAuthorization
 	 *
 	 * Main static method for tokens authorization.
 	 *
-	 * @param string  $tokenFilePath The tokens json file.
-	 * @param boolean $showWarnings  Indicates whether to output warnings
-	 *                               or not.
+	 * @param string  $tokensFilePath The tokens json file.
+	 * @param boolean $showWarnings   Indicates whether to output warnings
+	 *                                or not.
 	 *
 	 * @return ?array
 	 */
 	private static function authorizeTokenFile(
-		?string $tokenFilePath,
+		?string $tokensFilePath,
 		bool $showWarnings): ?array
 	{
 		$accessToken = null;
 		$exists = false;
 
-		if ($tokenFilePath !== null)
+		if ($tokensFilePath !== null)
 		{
-			$exists = file_exists($tokenFilePath);
+			$exists = file_exists($tokensFilePath);
 
 			if ($exists === true)
 			{
-				$fileContents = file_get_contents($tokenFilePath);
+				$fileContents = file_get_contents($tokensFilePath);
 				$accessToken = json_decode($fileContents, true);
 			}
 		}
 
 		if ($exists === false && $showWarnings === true)
 		{
-			echo 'WARNING: token file doesn\'t exist - ' . $tokenFilePath .
+			echo 'WARNING: token file doesn\'t exist - ' . $tokensFilePath .
 				PHP_EOL;
 		}
 
@@ -455,24 +458,24 @@ class GoogleAuthorization
 	 *
 	 * Last change method for authorization, usually requiring user interaction.
 	 *
-	 * @param object  $client          The client object.
-	 * @param string  $credentialsFile The standard project credentials json
-	 *                                 file.
-	 * @param string  $tokensFile      The tokens json file.
-	 * @param string  $name            The name of the project requesting
-	 *                                 authorization.
-	 * @param array   $scopes          The requested scopes of the project.
-	 * @param string  $redirectUrl     The URL which the authorization will
-	 *                                 complete to.
-	 * @param boolean $promptUser      Indicates whether to prompt the user to
-	 *                                 continue.
+	 * @param object  $client              The client object.
+	 * @param string  $credentialsFilePath The standard project credentials json
+	 *                                     file.
+	 * @param string  $tokensFilePath      The tokens json file.
+	 * @param string  $name                The name of the project requesting
+	 *                                     authorization.
+	 * @param array   $scopes              The requested scopes of the project.
+	 * @param string  $redirectUrl         The URL which the authorization will
+	 *                                     complete to.
+	 * @param boolean $promptUser          Indicates whether to prompt the user
+	 *                                     to continue.
 	 *
 	 * @return ?object
 	 */
 	private static function finalFallBack(
 		?object $client,
-		?string $credentialsFile,
-		?string $tokensFile,
+		?string $credentialsFilePath,
+		?string $tokensFilePath,
 		?string $name,
 		?array $scopes,
 		?string $redirectUrl,
@@ -483,8 +486,8 @@ class GoogleAuthorization
 			if (PHP_SAPI === 'cli')
 			{
 				$client = self::requestAuthorization(
-					$credentialsFile,
-					$tokensFile,
+					$credentialsFilePath,
+					$tokensFilePath,
 					$name,
 					$scopes,
 					true);
@@ -492,7 +495,7 @@ class GoogleAuthorization
 			else
 			{
 				$client = self::authorizeOauth(
-					$credentialsFile,
+					$credentialsFilePath,
 					$name,
 					$scopes,
 					$redirectUrl,
@@ -553,20 +556,20 @@ class GoogleAuthorization
 	 *
 	 * Prompts the user the authorization code in the command line interface.
 	 *
-	 * @param string  $credentialsFile The standard project credentials json
-	 *                                 file.
-	 * @param string  $tokensFile      The tokens json file.
-	 * @param string  $name            The name of the project requesting
-	 *                                 authorization.
-	 * @param array   $scopes          The requested scopes of the project.
-	 * @param boolean $showWarnings    Indicates whether to output warnings
-	 *                                 or not.
+	 * @param string  $credentialsFilePath The standard project credentials json
+	 *                                     file.
+	 * @param string  $tokensFilePath      The tokens json file.
+	 * @param string  $name                The name of the project requesting
+	 *                                     authorization.
+	 * @param array   $scopes              The requested scopes of the project.
+	 * @param boolean $showWarnings        Indicates whether to output warnings
+	 *                                     or not.
 	 *
 	 * @return ?object
 	 */
 	private static function requestAuthorization(
-		?string $credentialsFile,
-		?string $tokensFile,
+		?string $credentialsFilePath,
+		?string $tokensFilePath,
 		?string $name,
 		?array $scopes,
 		bool $showWarnings): ?object
@@ -584,7 +587,7 @@ class GoogleAuthorization
 		else
 		{
 			$client = self::setClient(
-				$credentialsFile,
+				$credentialsFilePath,
 				$name,
 				$scopes,
 				true,
@@ -598,8 +601,10 @@ class GoogleAuthorization
 		
 				$accessToken =
 					$client->fetchAccessTokenWithAuthCode($authorizationCode);
-				$client =
-					self::setAccessToken($client, $accessToken, $tokensFile);
+				$client = self::setAccessToken(
+					$client,
+					$accessToken,
+					$tokensFilePath);
 			}
 		}
 
@@ -611,17 +616,18 @@ class GoogleAuthorization
 	 *
 	 * Sets the access token in the client and stores the tokens in a file.
 	 *
-	 * @param object  $client       The client object.
-	 * @param array   $tokens       The authorization URL to use.
-	 * @param string  $tokensFile   The tokens json file.
-	 * @param boolean $showWarnings Indicates whether to output warnings or not.
+	 * @param object  $client         The client object.
+	 * @param array   $tokens         The authorization URL to use.
+	 * @param string  $tokensFilePath The tokens json file.
+	 * @param boolean $showWarnings   Indicates whether to output warnings or
+	 *                                not.
 	 *
 	 * @return ?object
 	 */
 	private static function setAccessToken(
 		?object $client,
 		?array $tokens,
-		?string $tokensFile,
+		?string $tokensFilePath,
 		bool $showWarnings): ?object
 	{
 		$updatedClient = null;
@@ -638,11 +644,11 @@ class GoogleAuthorization
 
 				$json = json_encode($tokens);
 
-				$isEmpty = empty($tokensFile);
+				$isEmpty = empty($tokensFilePath);
 
 				if ($isEmpty === false)
 				{
-					file_put_contents($tokensFile, $json);
+					file_put_contents($tokensFilePath, $json);
 				}
 			}
 		}
@@ -674,7 +680,7 @@ class GoogleAuthorization
 	 *
 	 * Creates a new client object and sets default properties.
 	 *
-	 * @param string  $credentialsFile     The standard project credentials json
+	 * @param string  $credentialsFilePath The standard project credentials json
 	 *                                     file.
 	 * @param string  $name                The name of the project requesting
 	 *                                     authorization.
@@ -686,7 +692,7 @@ class GoogleAuthorization
 	 * @return ?object
 	 */
 	private static function setClient(
-		?string $credentialsFile,
+		?string $credentialsFilePath,
 		string $name,
 		array $scopes,
 		bool $credentialsRequired,
@@ -695,9 +701,9 @@ class GoogleAuthorization
 		$client = null;
 		$exists = false;
 
-		if ($credentialsFile !== null)
+		if ($credentialsFilePath !== null)
 		{
-			$exists = file_exists($credentialsFile);
+			$exists = file_exists($credentialsFilePath);
 		}
 
 		if ($credentialsRequired === false || $exists === true)
@@ -711,7 +717,7 @@ class GoogleAuthorization
 	
 			if ($exists === true)
 			{
-				$client->setAuthConfig($credentialsFile);
+				$client->setAuthConfig($credentialsFilePath);
 			}
 		}
 		elseif ($credentialsRequired === true && $showWarnings === true)
