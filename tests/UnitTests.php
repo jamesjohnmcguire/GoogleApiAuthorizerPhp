@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace GoogleAuthorization\Tests;
+namespace GoogleApiAuthorization\Tests;
 
 $root = dirname(__DIR__, 1);
 
 require_once $root . '/SourceCode/vendor/autoload.php';
-require_once $root . '/SourceCode/GoogleAuthorization.php';
+require_once $root . '/SourceCode/GoogleApiAuthorization.php';
 
 use GoogleApiAuthorization\GoogleAuthorization;
 use GoogleApiAuthorization\Mode;

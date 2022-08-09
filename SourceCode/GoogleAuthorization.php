@@ -22,9 +22,6 @@ declare(strict_types=1);
 
 namespace GoogleApiAuthorization;
 
-require_once 'vendor/autoload.php';
-require_once 'Mode.php';
-
 /**
  * GoogleAuthorization class.
  *
