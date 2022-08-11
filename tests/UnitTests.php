@@ -164,7 +164,7 @@ final class UnitTests extends TestCase
 			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive'],
 			false);
-	
+
 		$this->assertNotNull($client);
 
 		$service = new \Google_Service_Drive($client);
