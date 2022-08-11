@@ -105,6 +105,251 @@ class GoogleAuthorization
 	}
 
 	/**
+	 * Authorize by OAuth method.
+	 *
+	 * Main static method for OAuth authorization.
+	 *
+	 * @param string  $credentialsFilePath The standard project credentials json
+	 *                                     file.
+	 * @param string  $name                The name of the project requesting
+	 *                                     authorization.
+	 * @param array   $scopes              The requested scopes of the project.
+	 * @param string  $redirectUrl         The URL which the authorization will
+	 *                                     complete to.
+	 * @param boolean $showWarnings        Indicates whether to output warnings
+	 *                                     or not.
+	 *
+	 * @return ?object
+	 */
+	public static function authorizeOauth(
+		?string $credentialsFilePath,
+		?string $name,
+		?array $scopes,
+		?string $redirectUrl,
+		bool $showWarnings): ?object
+	{
+		$client = null;
+
+		if (PHP_SAPI === 'cli')
+		{
+			if ($showWarnings === true)
+			{
+				echo 'WARNING: OAuth redirecting not supported ' .
+					'on the command line' . PHP_EOL;
+			}
+		}
+		else
+		{
+			$client = self::setClient(
+				$credentialsFilePath,
+				$name,
+				$scopes,
+				true,
+				$showWarnings);
+
+			$redirectUrl = filter_var($redirectUrl, FILTER_SANITIZE_URL);
+			$client->setRedirectUri($redirectUrl);
+
+			$codeExists = array_key_exists('code', $_GET);
+
+			if ($codeExists === true)
+			{
+				$code = $_GET['code'];
+				$token = $client->fetchAccessTokenWithAuthCode($code);
+				$client->setAccessToken($token);
+			}
+			else
+			{
+				$authorizationUrl = $client->createAuthUrl();
+				header('Location: ' . $authorizationUrl);
+			}
+		}
+
+		return $client;
+	}
+
+	/**
+	 * Authorize by service account method.
+	 *
+	 * Main static method for service account authorization.
+	 *
+	 * @param string  $serviceAccountFilePath The service account credentials
+	 *                                        json file.
+	 * @param string  $name                   The name of the project requesting
+	 *                                        authorization.
+	 * @param array   $scopes                 The requested scopes of the
+	 *                                        project.
+	 * @param boolean $showWarnings           Indicates whether to output
+	 *                                        warnings or not.
+	 *
+	 * @return ?object
+	 */
+	public static function authorizeServiceAccount(
+		?string $serviceAccountFilePath,
+		?string $name,
+		?array $scopes,
+		bool $showWarnings): ?object
+	{
+		$client = null;
+		$exists = false;
+
+		if ($serviceAccountFilePath !== null)
+		{
+			$exists = file_exists($serviceAccountFilePath);
+
+			if ($exists === true)
+			{
+				$serviceAccountFilePath = realpath($serviceAccountFilePath);
+				$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS=' .
+					$serviceAccountFilePath;
+				putenv($environmentVariable);
+			}
+		}
+
+		// Even if specified file in variable is invalid, perhaps environment
+		// variable ok.
+		$serviceAccountFilePath = getenv('GOOGLE_APPLICATION_CREDENTIALS');
+
+		if ($serviceAccountFilePath !== false)
+		{
+			$exists = file_exists($serviceAccountFilePath);
+		}
+
+		if ($serviceAccountFilePath !== false && $exists === true)
+		{
+			$client = self::setClient(
+				null,
+				$name,
+				$scopes,
+				false,
+				$showWarnings);
+
+			// Nothing else to do... Google API will use the file defined in the
+			// GOOGLE_APPLICATION_CREDENTIALS environment variable.
+			if ($client !== null)
+			{
+				$client->useApplicationDefaultCredentials();
+			}
+		}
+		elseif ($showWarnings === true)
+		{
+			echo 'WARNING: Service account credentials not set' . PHP_EOL;
+		}
+
+		return $client;
+	}
+
+	/**
+	 * Authorize by tokens method.
+	 *
+	 * Main static method for tokens authorization.
+	 *
+	 * @param string  $credentialsFilePath The standard project credentials json
+	 *                                     file.
+	 * @param string  $tokensFilePath      The tokens json file.
+	 * @param string  $name                The name of the project requesting
+	 *                                     authorization.
+	 * @param array   $scopes              The requested scopes of the project.
+	 * @param boolean $showWarnings        Indicates whether to output
+	 *                                     warnings or not.
+	 *
+	 * @return ?object
+	 */
+	public static function authorizeToken(
+		?string $credentialsFilePath,
+		?string $tokensFilePath,
+		?string $name,
+		?array $scopes,
+		bool $showWarnings): ?object
+	{
+		$client = null;
+		$accessToken = self::authorizeTokenFile($tokensFilePath, $showWarnings);
+
+		if ($accessToken === null)
+		{
+			$accessToken = self::authorizeTokenLocal($showWarnings);
+		}
+
+		if ($accessToken !== null)
+		{
+			$client = self::setClient(
+				$credentialsFilePath,
+				$name,
+				$scopes,
+				true,
+				$showWarnings);
+
+			$client = self::setAccessToken(
+				$client,
+				$accessToken,
+				$tokensFilePath,
+				$showWarnings);
+		}
+
+		return $client;
+	}
+
+	/**
+	 * Prompt for authorization code CLI method.
+	 *
+	 * Prompts the user the authorization code in the command line interface.
+	 *
+	 * @param string  $credentialsFilePath The standard project credentials json
+	 *                                     file.
+	 * @param string  $tokensFilePath      The tokens json file.
+	 * @param string  $name                The name of the project requesting
+	 *                                     authorization.
+	 * @param array   $scopes              The requested scopes of the project.
+	 * @param boolean $showWarnings        Indicates whether to output warnings
+	 *                                     or not.
+	 *
+	 * @return ?object
+	 */
+	public static function requestAuthorization(
+		?string $credentialsFilePath,
+		?string $tokensFilePath,
+		?string $name,
+		?array $scopes,
+		bool $showWarnings): ?object
+	{
+		$client = null;
+
+		if (PHP_SAPI !== 'cli')
+		{
+			if ($showWarnings === true)
+			{
+				echo 'WARNING: Requesting user authorization only works at ' .
+					'the command line' . PHP_EOL;
+			}
+		}
+		else
+		{
+			$client = self::setClient(
+				$credentialsFilePath,
+				$name,
+				$scopes,
+				true,
+				$showWarnings);
+
+			if ($client !== null)
+			{
+				$authorizationUrl = $client->createAuthUrl();
+				$authorizationCode =
+					self::promptForAuthorizationCodeCli($authorizationUrl);
+		
+				$accessToken =
+					$client->fetchAccessTokenWithAuthCode($authorizationCode);
+				$client = self::setAccessToken(
+					$client,
+					$accessToken,
+					$tokensFilePath);
+			}
+		}
+
+		return $client;
+	}
+
+	/**
 	 * Authorize by mode method.
 	 *
 	 * Main sub method for authorization.
@@ -203,191 +448,6 @@ class GoogleAuthorization
 			default:
 				// Use final fall back.
 				break;
-		}
-
-		return $client;
-	}
-
-	/**
-	 * Authorize by OAuth method.
-	 *
-	 * Main static method for OAuth authorization.
-	 *
-	 * @param string  $credentialsFilePath The standard project credentials json
-	 *                                     file.
-	 * @param string  $name                The name of the project requesting
-	 *                                     authorization.
-	 * @param array   $scopes              The requested scopes of the project.
-	 * @param string  $redirectUrl         The URL which the authorization will
-	 *                                     complete to.
-	 * @param boolean $showWarnings        Indicates whether to output warnings
-	 *                                     or not.
-	 *
-	 * @return ?object
-	 */
-	private static function authorizeOauth(
-		?string $credentialsFilePath,
-		?string $name,
-		?array $scopes,
-		?string $redirectUrl,
-		bool $showWarnings): ?object
-	{
-		$client = null;
-
-		if (PHP_SAPI === 'cli')
-		{
-			if ($showWarnings === true)
-			{
-				echo 'WARNING: OAuth redirecting not supported ' .
-					'on the command line' . PHP_EOL;
-			}
-		}
-		else
-		{
-			$client = self::setClient(
-				$credentialsFilePath,
-				$name,
-				$scopes,
-				true,
-				$showWarnings);
-
-			$redirectUrl = filter_var($redirectUrl, FILTER_SANITIZE_URL);
-			$client->setRedirectUri($redirectUrl);
-
-			$codeExists = array_key_exists('code', $_GET);
-
-			if ($codeExists === true)
-			{
-				$code = $_GET['code'];
-				$token = $client->fetchAccessTokenWithAuthCode($code);
-				$client->setAccessToken($token);
-			}
-			else
-			{
-				$authorizationUrl = $client->createAuthUrl();
-				header('Location: ' . $authorizationUrl);
-			}
-		}
-
-		return $client;
-	}
-
-	/**
-	 * Authorize by service account method.
-	 *
-	 * Main static method for service account authorization.
-	 *
-	 * @param string  $serviceAccountFilePath The service account credentials
-	 *                                        json file.
-	 * @param string  $name                   The name of the project requesting
-	 *                                        authorization.
-	 * @param array   $scopes                 The requested scopes of the
-	 *                                        project.
-	 * @param boolean $showWarnings           Indicates whether to output
-	 *                                        warnings or not.
-	 *
-	 * @return ?object
-	 */
-	private static function authorizeServiceAccount(
-		?string $serviceAccountFilePath,
-		?string $name,
-		?array $scopes,
-		bool $showWarnings): ?object
-	{
-		$client = null;
-		$exists = false;
-
-		if ($serviceAccountFilePath !== null)
-		{
-			$exists = file_exists($serviceAccountFilePath);
-
-			if ($exists === true)
-			{
-				$serviceAccountFilePath = realpath($serviceAccountFilePath);
-				$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS=' .
-					$serviceAccountFilePath;
-				putenv($environmentVariable);
-			}
-		}
-
-		// Even if specified file in variable is invalid, perhaps environment
-		// variable ok.
-		$serviceAccountFilePath = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-
-		if ($serviceAccountFilePath !== false)
-		{
-			$exists = file_exists($serviceAccountFilePath);
-		}
-
-		if ($serviceAccountFilePath !== false && $exists === true)
-		{
-			$client = self::setClient(
-				null,
-				$name,
-				$scopes,
-				false,
-				$showWarnings);
-
-			// Nothing else to do... Google API will use the file defined in the
-			// GOOGLE_APPLICATION_CREDENTIALS environment variable.
-			if ($client !== null)
-			{
-				$client->useApplicationDefaultCredentials();
-			}
-		}
-		elseif ($showWarnings === true)
-		{
-			echo 'WARNING: Service account credentials not set' . PHP_EOL;
-		}
-
-		return $client;
-	}
-
-	/**
-	 * Authorize by tokens method.
-	 *
-	 * Main static method for tokens authorization.
-	 *
-	 * @param string  $credentialsFilePath The standard project credentials json
-	 *                                     file.
-	 * @param string  $tokensFilePath      The tokens json file.
-	 * @param string  $name                The name of the project requesting
-	 *                                     authorization.
-	 * @param array   $scopes              The requested scopes of the project.
-	 * @param boolean $showWarnings        Indicates whether to output
-	 *                                     warnings or not.
-	 *
-	 * @return ?object
-	 */
-	private static function authorizeToken(
-		?string $credentialsFilePath,
-		?string $tokensFilePath,
-		?string $name,
-		?array $scopes,
-		bool $showWarnings): ?object
-	{
-		$client = null;
-		$accessToken = self::authorizeTokenFile($tokensFilePath, $showWarnings);
-
-		if ($accessToken === null)
-		{
-			$accessToken = self::authorizeTokenLocal($showWarnings);
-		}
-
-		if ($accessToken !== null)
-		{
-			$client = self::setClient(
-				$credentialsFilePath,
-				$name,
-				$scopes,
-				true,
-				$showWarnings);
-
-			$client = self::setAccessToken(
-				$client,
-				$accessToken,
-				$tokensFilePath,
-				$showWarnings);
 		}
 
 		return $client;
@@ -546,66 +606,6 @@ class GoogleAuthorization
 		$$authorizationCode = trim($authorizationCode);
 
 		return $authorizationCode;
-	}
-
-	/**
-	 * Prompt for authorization code CLI method.
-	 *
-	 * Prompts the user the authorization code in the command line interface.
-	 *
-	 * @param string  $credentialsFilePath The standard project credentials json
-	 *                                     file.
-	 * @param string  $tokensFilePath      The tokens json file.
-	 * @param string  $name                The name of the project requesting
-	 *                                     authorization.
-	 * @param array   $scopes              The requested scopes of the project.
-	 * @param boolean $showWarnings        Indicates whether to output warnings
-	 *                                     or not.
-	 *
-	 * @return ?object
-	 */
-	private static function requestAuthorization(
-		?string $credentialsFilePath,
-		?string $tokensFilePath,
-		?string $name,
-		?array $scopes,
-		bool $showWarnings): ?object
-	{
-		$client = null;
-
-		if (PHP_SAPI !== 'cli')
-		{
-			if ($showWarnings === true)
-			{
-				echo 'WARNING: Requesting user authorization only works at ' .
-					'the command line' . PHP_EOL;
-			}
-		}
-		else
-		{
-			$client = self::setClient(
-				$credentialsFilePath,
-				$name,
-				$scopes,
-				true,
-				$showWarnings);
-
-			if ($client !== null)
-			{
-				$authorizationUrl = $client->createAuthUrl();
-				$authorizationCode =
-					self::promptForAuthorizationCodeCli($authorizationUrl);
-		
-				$accessToken =
-					$client->fetchAccessTokenWithAuthCode($authorizationCode);
-				$client = self::setAccessToken(
-					$client,
-					$accessToken,
-					$tokensFilePath);
-			}
-		}
-
-		return $client;
 	}
 
 	/**
