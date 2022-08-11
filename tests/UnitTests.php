@@ -54,6 +54,31 @@ final class UnitTests extends TestCase
 			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive'],
 			'http://localhost:8000/test.php');
+
+		$this->assertNotNull($client);
+
+		$service = new \Google_Service_Drive($client);
+		$about = $service->about;
+
+		$options =
+		[
+			'fields' => 'storageQuota',
+			'prettyPrint' => true
+		];
+
+		$response = $about->get($options);
+		$this->assertNotNull($response);
+
+		$this->assertInstanceOf('Google\Service\Drive\About', $response);
+	}
+
+	public function testServiceAccountDirectSuccess()
+	{
+		$client = GoogleAuthorization::authorizeServiceAccount(
+			$this->serviceAccountFilePath,
+			'Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			false);
 	
 		$this->assertNotNull($client);
 
@@ -71,7 +96,7 @@ final class UnitTests extends TestCase
 
 		$this->assertInstanceOf('Google\Service\Drive\About', $response);
 	}
-	
+
 	public function testServiceAccountSuccess()
 	{
 		$client = GoogleAuthorization::authorize(
@@ -129,6 +154,32 @@ final class UnitTests extends TestCase
 			['promptUser' => false, 'showWarnings' => false]);
 	
 		$this->assertNull($client);
+	}
+
+	public function testTokensDirectSuccess()
+	{
+		$client = GoogleAuthorization::authorizeToken(
+			$this->credentialsFilePath,
+			$this->tokensFilePath,
+			'Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			false);
+	
+		$this->assertNotNull($client);
+
+		$service = new \Google_Service_Drive($client);
+		$about = $service->about;
+
+		$options =
+		[
+			'fields' => 'storageQuota',
+			'prettyPrint' => true
+		];
+
+		$response = $about->get($options);
+		$this->assertNotNull($response);
+
+		$this->assertInstanceOf('Google\Service\Drive\About', $response);
 	}
 
 	public function testTokensSuccess()
