@@ -4,7 +4,7 @@
  * Google API Authorization Library
  *
  * Description: Google API Authorization Library.
- * Version:     0.1.0
+ * Version:     1.0.0
  * Author:      James John McGuire
  * Author URI:  http://www.digitalzenworks.com/
  * PHP version  8.1.1
@@ -14,7 +14,7 @@
  * @author    James John McGuire <jamesjohnmcguire@gmail.com>
  * @copyright 2022 James John McGuire <jamesjohnmcguire@gmail.com>
  * @license   MIT https://opensource.org/licenses/MIT
- * @version   0.1.0
+ * @version   1.0.0
  * @link      https://github.com/jamesjohnmcguire/GoogleApiAuthorizationPhp
  */
 
@@ -26,10 +26,6 @@ namespace GoogleApiAuthorization;
  * The Mode enum.
  *
  * Contians all the modes of authorization.
- *
- * @package GoogleApiAuthorization;
- * @author  James John McGuire <jamesjohnmcguire@gmail.com>
- * @since   0.1.0
  */
 enum Mode
 {
