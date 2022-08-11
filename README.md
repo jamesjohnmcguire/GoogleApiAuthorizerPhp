@@ -71,7 +71,7 @@ The different modes are:
 The different options are:
 
 | Option:       |                                                  | default |
-| ------------- | ---------------------------------------------------------- |
+| ------------- | ------------------------------------------------ | ------- |
 | promptUser    | If needed, prompt the user for additional action | true    |
 | showWarnings  | Output warnings, if present                      | true    |
 
