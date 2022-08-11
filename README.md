@@ -75,6 +75,7 @@ The different options are:
 | promptUser    | If needed, prompt the user for additional action | true    |
 | showWarnings  | Output warnings, if present                      | true    |
 
+
 ## Additional Examples
 You can call the authorization modes directly, such as:
 ```php
