@@ -1,8 +1,9 @@
 {
-	"name": "digitalzenworks/google-api-authorization",
 	"description": "Google API Authorization Package File",
-	"type": "project",
+	"homepage": "https://github.com/jamesjohnmcguire/GoogleApiAuthorizationPhp/",
 	"license": "MIT",
+	"name": "digitalzenworks/google-api-authorization",
+	"type": "library",
 	"authors": [
 		{
 			"name": "JamesMc",
@@ -16,6 +17,19 @@
 			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
 	},
+	"keywords": [
+		"Google API",
+		"Authorization",
+		"Service Account",
+		"Tokens",
+		"OAuth"
+	],
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/jamesjohnmcguire/GoogleApiAuthorizationPhp/"
+		}
+	],
 	"require":
 	{
 		"google/apiclient": "^2.11"
