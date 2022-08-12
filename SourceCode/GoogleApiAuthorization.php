@@ -24,4 +24,4 @@ namespace DigitalZenWorks\GoogleApiAuthorization;
 
 require_once 'vendor/autoload.php';
 require_once 'Mode.php';
-require_once 'GoogleAuthorization.php';
+require_once 'Authorizer.php';

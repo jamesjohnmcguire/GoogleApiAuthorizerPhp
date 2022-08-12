@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace DigitalZenWorks\GoogleApiAuthorization;
 
 /**
- * GoogleAuthorization class.
+ * Authorizer class.
  *
  * Contians all the core functionality for authorization.
  */
-class GoogleAuthorization
+class Authorizer
 {
 	/**
 	 * Authorize method.

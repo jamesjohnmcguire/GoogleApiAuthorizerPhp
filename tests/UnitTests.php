@@ -9,7 +9,7 @@ $root = dirname(__DIR__, 1);
 require_once $root . '/SourceCode/vendor/autoload.php';
 require_once $root . '/SourceCode/GoogleApiAuthorization.php';
 
-use DigitalZenWorks\GoogleApiAuthorization\GoogleAuthorization;
+use DigitalZenWorks\GoogleApiAuthorization\Authorizer;
 use DigitalZenWorks\GoogleApiAuthorization\Mode;
 use PHPUnit\Framework\TestCase;
 
@@ -46,7 +46,7 @@ final class UnitTests extends TestCase
 
 	public function testDiscoverSuccess()
 	{
-		$client = GoogleAuthorization::authorize(
+		$client = Authorizer::authorize(
 			Mode::Discover,
 			$this->credentialsFilePath,
 			$this->serviceAccountFilePath,
@@ -74,7 +74,7 @@ final class UnitTests extends TestCase
 
 	public function testServiceAccountDirectSuccess()
 	{
-		$client = GoogleAuthorization::authorizeServiceAccount(
+		$client = Authorizer::authorizeServiceAccount(
 			$this->serviceAccountFilePath,
 			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive'],
@@ -99,7 +99,7 @@ final class UnitTests extends TestCase
 
 	public function testServiceAccountSuccess()
 	{
-		$client = GoogleAuthorization::authorize(
+		$client = Authorizer::authorize(
 			Mode::ServiceAccount,
 			null,
 			$this->serviceAccountFilePath,
@@ -128,7 +128,7 @@ final class UnitTests extends TestCase
 
 	public function testTokensFailNoCredentials()
 	{
-		$client = GoogleAuthorization::authorize(
+		$client = Authorizer::authorize(
 			Mode::Token,
 			null,
 			null,
@@ -143,7 +143,7 @@ final class UnitTests extends TestCase
 
 	public function testTokensFailNoTokens()
 	{
-		$client = GoogleAuthorization::authorize(
+		$client = Authorizer::authorize(
 			Mode::Token,
 			$this->credentialsFilePath,
 			null,
@@ -158,7 +158,7 @@ final class UnitTests extends TestCase
 
 	public function testTokensDirectSuccess()
 	{
-		$client = GoogleAuthorization::authorizeToken(
+		$client = Authorizer::authorizeToken(
 			$this->credentialsFilePath,
 			$this->tokensFilePath,
 			'Google Drive API File Uploader',
@@ -184,7 +184,7 @@ final class UnitTests extends TestCase
 
 	public function testTokensSuccess()
 	{
-		$client = GoogleAuthorization::authorize(
+		$client = Authorizer::authorize(
 			Mode::Token,
 			$this->credentialsFilePath,
 			null,
