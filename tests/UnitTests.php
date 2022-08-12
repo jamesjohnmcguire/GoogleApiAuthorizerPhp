@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace GoogleApiAuthorization\Tests;
+namespace DigitalZenWorks\GoogleApiAuthorization\Tests;
 
 $root = dirname(__DIR__, 1);
 
 require_once $root . '/SourceCode/vendor/autoload.php';
 require_once $root . '/SourceCode/GoogleApiAuthorization.php';
 
-use GoogleApiAuthorization\GoogleAuthorization;
-use GoogleApiAuthorization\Mode;
+use DigitalZenWorks\GoogleApiAuthorization\GoogleAuthorization;
+use DigitalZenWorks\GoogleApiAuthorization\Mode;
 use PHPUnit\Framework\TestCase;
 
 final class UnitTests extends TestCase
