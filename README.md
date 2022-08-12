@@ -22,10 +22,10 @@ There is one main class with one main static method.  You can specify the author
 ```php
 require_once  'vendor/autoload.php';
 
-use GoogleApiAuthorization\GoogleAuthorization;
-use GoogleApiAuthorization\Mode;
+use DigitalZenWorks\GoogleApiAuthorization\GoogleAuthorization;
+use DigitalZenWorks\GoogleApiAuthorization\Mode;
 
-$client = GoogleAuthorization::authorize(
+$client = Authorizer::authorize(
 	Mode::Discover,
 	$credentialsFilePath,
 	$serviceAccountFilePath,
@@ -79,13 +79,13 @@ The different options are:
 ## Additional Examples
 You can call the authorization modes directly, such as:
 ```php
-		$client = GoogleAuthorization::authorizeServiceAccount(
+		$client = Authorizer::authorizeServiceAccount(
 			$serviceAccountFilePath,
 			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive'],
 			false);
 
-		$client = GoogleAuthorization::authorizeToken(
+		$client = Authorizer::authorizeToken(
 			$credentialsFilePath,
 			$tokensFilePath,
 			'Google Drive API File Uploader',
