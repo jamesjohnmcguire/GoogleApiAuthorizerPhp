@@ -80,14 +80,14 @@ The different options are:
 You can call the authorization modes directly, such as:
 ```php
 		$client = GoogleAuthorization::authorizeServiceAccount(
-			$this->serviceAccountFilePath,
+			$serviceAccountFilePath,
 			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive'],
 			false);
 
 		$client = GoogleAuthorization::authorizeToken(
-			$this->credentialsFilePath,
-			$this->tokensFilePath,
+			$credentialsFilePath,
+			$tokensFilePath,
 			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive'],
 			false);
