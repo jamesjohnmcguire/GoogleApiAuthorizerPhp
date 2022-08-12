@@ -10,6 +10,11 @@
 			"email": "jamesjohnmcguire@gmail.com"
 		}
 	],
+	"autoload": {
+		"psr-4": {
+			"DigitalZenWorks\\GoogleApiAuthorization\\": "SourceCode/"
+		}
+	},
 	"config": {
 		"process-timeout": 0,
 		"vendor-dir": "SourceCode/vendor",
