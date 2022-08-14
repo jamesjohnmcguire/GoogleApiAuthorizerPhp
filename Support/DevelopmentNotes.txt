@@ -1,3 +1,10 @@
+Google Api Authorize
 Tasks
-	Make consistent: tokensFilePath, tokenFilePath, tokensFile
 	Code styles on unit tests?
+	Add release tag	Add gh release create %2 --notes %3
+	PHP Version	Revisit support for older versions
+	Add PHP Doc
+	composer install --prefer-dist
+	build.sh with 	phpDocumentor.phar --setting="graphs.enabled=true" -d SourceCode -t Documentation
+		Make consistent: tokensFilePath, tokenFilePath, tokensFile
+		Add git hub auto-update hook	This package is not auto-updated. Please set up the GitHub Hook for Packagist so that it gets updated whenever you push!
