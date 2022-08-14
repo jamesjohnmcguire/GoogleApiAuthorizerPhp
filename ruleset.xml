@@ -25,10 +25,6 @@
 
 	<exclude-pattern>vendor</exclude-pattern>
 
-	<rule ref="Generic.Arrays">
-		<exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
-	</rule>
-
 	<rule ref="Generic.Files.LineLength">
 		<properties>
 			<property name="lineLimit" value="180"/>
@@ -44,6 +40,7 @@
 	</rule>
 
 	<rule ref="Generic">
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
 		<exclude name="Generic.Classes.OpeningBraceSameLine.BraceOnNewLine"/>
 		<exclude name="Generic.Files.EndFileNoNewline.Found"/>
 		<exclude name="Generic.Files.LowercasedFilename.NotFound"/>
@@ -79,6 +76,7 @@
 	<rule ref="PHPCompatibility">
 	</rule>
 
+	<rule ref="PSR1" />
 	<rule ref="PSR2">
 		<exclude name="PSR2.Methods.FunctionCallSignature.CloseBracketLine"/>
 		<exclude name="PSR2.Methods.FunctionCallSignature.Indent"/>
@@ -86,9 +84,12 @@
 
 	<rule ref="PSR12">
 		<exclude name="PSR12.ControlStructures.ControlStructureSpacing.CloseParenthesisLine"/>
+		<exclude name="PSR12.ControlStructures.ControlStructureSpacing.FirstExpressionLine"/>
+		<exclude name="PSR12.Files.FileHeader.SpacingAfterBlock"/>
 	</rule>
 
 	<rule ref="Squiz">
+		<exclude name="Squiz.Arrays.ArrayDeclaration.SingleLineNotAllowed"/>
 		<exclude name="Squiz.Commenting.ClosingDeclarationComment.Missing"/>
 		<exclude name="Squiz.Commenting.FileComment.IncorrectAuthor"/>
 		<exclude name="Squiz.Commenting.FileComment.IncorrectCopyright"/>
@@ -107,10 +108,13 @@
 		<exclude name="Squiz.Functions.MultiLineFunctionDeclaration.CloseBracketLine"/>
 		<exclude name="Squiz.Functions.MultiLineFunctionDeclaration.NewlineBeforeOpenBrace"/>
 		<exclude name="Squiz.Strings.ConcatenationSpacing.PaddingFound"/>
+		<exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
 		<exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace.SpacingBeforeClose"/>
 		<exclude name="Squiz.WhiteSpace.FunctionSpacing.After"/>
 		<exclude name="Squiz.WhiteSpace.FunctionSpacing.AfterLast"/>
+		<exclude name="Squiz.WhiteSpace.FunctionSpacing.Before"/>
 		<exclude name="Squiz.WhiteSpace.FunctionSpacing.BeforeFirst"/>
+		<exclude name="Squiz.WhiteSpace.MemberVarSpacing.FirstIncorrect"/>
 		<exclude name="Squiz.WhiteSpace.OperatorSpacing.SpacingAfter"/>
 	</rule>
 
