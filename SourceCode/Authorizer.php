@@ -434,6 +434,12 @@ class Authorizer
 		?string $tokensFilePath,
 		?string $redirectUrl = null): ?object
 	{
+		$options =
+		[
+			'promptUser'   => $this->promptUser,
+			'showWarnings' => $this->showWarnings
+		];
+
 		$client = self::authorize(
 			$mode,
 			$credentialsFilePath,
@@ -442,7 +448,7 @@ class Authorizer
 			$this->name,
 			$this->scopes,
 			$redirectUrl,
-			$this->options);
+			$options);
 
 		return $client;
 	}
