@@ -94,6 +94,17 @@ You can call the authorization modes directly, such as:
 ```
 Using an instanciated object:
 ```php
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+		['https://www.googleapis.com/auth/drive'],
+		['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorize(
+			Mode::Discover,
+			$this->credentialsFilePath,
+			$this->serviceAccountFilePath,
+			$this->tokensFilePath,
+			'http://localhost:8000/test.php');
+```
 
 View the tests.php or UnitTests.php files for more examples.
 
