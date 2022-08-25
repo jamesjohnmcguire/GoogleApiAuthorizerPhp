@@ -72,6 +72,36 @@ final class UnitTests extends TestCase
 		$this->assertInstanceOf('Google\Service\Drive\About', $response);
 	}
 
+	public function testObjectDiscoveryTest()
+	{
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+		['https://www.googleapis.com/auth/drive'],
+		['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorize(
+			Mode::Discover,
+			$this->credentialsFilePath,
+			$this->serviceAccountFilePath,
+			$this->tokensFilePath,
+			'http://localhost:8000/test.php');
+	
+		$this->assertNotNull($client);
+
+		$service = new \Google_Service_Drive($client);
+		$about = $service->about;
+
+		$options =
+		[
+			'fields' => 'storageQuota',
+			'prettyPrint' => true
+		];
+
+		$response = $about->get($options);
+		$this->assertNotNull($response);
+
+		$this->assertInstanceOf('Google\Service\Drive\About', $response);
+	}
+
 	public function testServiceAccountDirectSuccess()
 	{
 		$client = Authorizer::authorizeServiceAccount(
