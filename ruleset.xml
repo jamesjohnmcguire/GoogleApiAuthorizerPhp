@@ -89,6 +89,7 @@
 	</rule>
 
 	<rule ref="Squiz">
+		<exclude name="Squiz.Arrays.ArrayDeclaration.NoComma"/>
 		<exclude name="Squiz.Arrays.ArrayDeclaration.SingleLineNotAllowed"/>
 		<exclude name="Squiz.Commenting.ClosingDeclarationComment.Missing"/>
 		<exclude name="Squiz.Commenting.FileComment.IncorrectAuthor"/>
