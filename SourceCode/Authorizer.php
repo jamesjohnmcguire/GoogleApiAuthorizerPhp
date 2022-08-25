@@ -30,6 +30,68 @@ namespace DigitalZenWorks\GoogleApiAuthorization;
 class Authorizer
 {
 	/**
+	 * Name.
+	 *
+	 * @var string
+	 */
+	public string $name;
+
+	/**
+	 * Scopes.
+	 *
+	 * @var array
+	 */
+	public array $scopes;
+
+	/**
+	 * Prompt user.
+	 *
+	 * @var boolean
+	 */
+	public bool $promptUser = true;
+
+	/**
+	 * Show warnings.
+	 *
+	 * @var boolean
+	 */
+	public bool $showWarnings = true;
+
+	/**
+	 * Constructor.
+	 *
+	 * Constuctor method.
+	 *
+	 * @param string $name    The name of the project requesting authorization.
+	 * @param array  $scopes  The requested scopes of the project.
+	 * @param array  $options Additional options.
+	 */
+	public function __construct(
+		?string $name,
+		?array $scopes,
+		?array $options = null)
+	{
+		$this->name = $name;
+		$this->scopes = $scopes;
+
+		// Process options.
+		if ($options !== null)
+		{
+			$keyExists = array_key_exists('promptUser', $options);
+			if ($keyExists === true)
+			{
+				$promptUser = $options['promptUser'];
+			}
+
+			$keyExists = array_key_exists('showWarnings', $options);
+			if ($keyExists === true)
+			{
+				$showWarnings = $options['showWarnings'];
+			}
+		}
+	}
+
+	/**
 	 * Authorize method.
 	 *
 	 * Main static method for authorization.
@@ -345,6 +407,140 @@ class Authorizer
 					$tokensFilePath);
 			}
 		}
+
+		return $client;
+	}
+
+	/**
+	 * Authorize method.
+	 *
+	 * Main static method for authorization.
+	 *
+	 * @param Mode   $mode                   The file to process.
+	 * @param string $credentialsFilePath    The standard project credentials
+	 *                                       json file.
+	 * @param string $serviceAccountFilePath The service account credentials
+	 *                                       json file.
+	 * @param string $tokensFilePath         The tokens json file.
+	 * @param string $redirectUrl            The URL which the authorization
+	 *                                       will complete to.
+	 *
+	 * @return ?object
+	 */
+	public function apiAuthorize(
+		Mode $mode,
+		?string $credentialsFilePath,
+		?string $serviceAccountFilePath,
+		?string $tokensFilePath,
+		?string $redirectUrl = null): ?object
+	{
+		$client = self::authorize(
+			$mode,
+			$credentialsFilePath,
+			$serviceAccountFilePath,
+			$tokensFilePath,
+			$this->name,
+			$this->scopes,
+			$redirectUrl,
+			$this->options);
+
+		return $client;
+	}
+
+	/**
+	 * Authorize by OAuth method.
+	 *
+	 * Main static method for OAuth authorization.
+	 *
+	 * @param string $credentialsFilePath The standard project credentials json
+	 *                                    file.
+	 * @param string $redirectUrl         The URL which the authorization will
+	 *                                    complete to.
+	 *
+	 * @return ?object
+	 */
+	public function apiAuthorizeOauth(
+		?string $credentialsFilePath,
+		?string $redirectUrl): ?object
+	{
+		$client = self::authorizeOauth(
+			$credentialsFilePath,
+			$this->name,
+			$this->scopes,
+			$redirectUrl,
+			$this->showWarnings);
+
+		return $client;
+	}
+
+	/**
+	 * Authorize by service account method.
+	 *
+	 * Main static method for service account authorization.
+	 *
+	 * @param string $serviceAccountFilePath The service account credentials
+	 *                                       json file.
+	 *
+	 * @return ?object
+	 */
+	public function apiAuthorizeServiceAccount(
+		?string $serviceAccountFilePath): ?object
+	{
+		$client = self::authorizeServiceAccount(
+			$serviceAccountFilePath,
+			$this->name,
+			$this->scopes,
+			$this->showWarnings);
+
+		return $client;
+	}
+
+	/**
+	 * Authorize by tokens method.
+	 *
+	 * Main static method for tokens authorization.
+	 *
+	 * @param string $credentialsFilePath The standard project credentials json
+	 *                                    file.
+	 * @param string $tokensFilePath      The tokens json file.
+	 *
+	 * @return ?object
+	 */
+	public function apiAuthorizeToken(
+		?string $credentialsFilePath,
+		?string $tokensFilePath): ?object
+	{
+		$client = self::authorizeToken(
+			$credentialsFilePath,
+			$tokensFilePath,
+			$this->name,
+			$this->scopes,
+			$this->showWarnings);
+
+		return $client;
+	}
+
+	/**
+	 * Prompt for authorization code CLI method.
+	 *
+	 * Prompts the user the authorization code in the command line interface.
+	 *
+	 * @param string $credentialsFilePath The standard project credentials json
+	 *                                    file.
+	 * @param string $tokensFilePath      The tokens json file.
+	 *
+	 * @return ?object
+	 */
+	public function requestApiAuthorization(
+		?string $credentialsFilePath,
+		?string $tokensFilePath): ?object
+	{
+		$client = self::requestAuthorization(
+			$credentialsFilePath,
+			$tokensFilePath,
+			$this->name,
+			$this->scopes,
+			$this->showWarnings);
 
 		return $client;
 	}
