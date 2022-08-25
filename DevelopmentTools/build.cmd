@@ -1,9 +1,6 @@
 CD %~dp0
 CD ..
 
-REM IF "%1"=="complete" GOTO complete
-REM GOTO deploy
-
 :complete
 CALL composer validate --strict
 CALL composer install --prefer-dist
