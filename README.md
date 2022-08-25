@@ -92,6 +92,8 @@ You can call the authorization modes directly, such as:
 			['https://www.googleapis.com/auth/drive'],
 			false);
 ```
+Using an instanciated object:
+```php
 
 View the tests.php or UnitTests.php files for more examples.
 
