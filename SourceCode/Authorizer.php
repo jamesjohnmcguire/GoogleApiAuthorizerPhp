@@ -807,7 +807,7 @@ class Authorizer
 		echo $authorizationUrl . PHP_EOL;
 		echo 'Enter verification code: ';
 		$authorizationCode = fgets(STDIN);
-		$$authorizationCode = trim($authorizationCode);
+		$authorizationCode = trim($authorizationCode);
 
 		return $authorizationCode;
 	}
