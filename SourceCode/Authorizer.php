@@ -96,7 +96,8 @@ class Authorizer
 	 *
 	 * Main static method for authorization.
 	 *
-	 * @param Mode   $mode                   The file to process.
+	 * @param Mode   $mode                   The type of authorization to
+	 *                                       process.
 	 * @param string $credentialsFilePath    The standard project credentials
 	 *                                       json file.
 	 * @param string $serviceAccountFilePath The service account credentials
@@ -416,7 +417,8 @@ class Authorizer
 	 *
 	 * Main static method for authorization.
 	 *
-	 * @param Mode   $mode                   The file to process.
+	 * @param Mode   $mode                   The type of authorization to
+	 *                                       process.
 	 * @param string $credentialsFilePath    The standard project credentials
 	 *                                       json file.
 	 * @param string $serviceAccountFilePath The service account credentials
