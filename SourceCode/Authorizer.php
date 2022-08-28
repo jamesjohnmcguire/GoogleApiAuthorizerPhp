@@ -853,7 +853,8 @@ class Authorizer
 				}
 			}
 		}
-		elseif ($updatedClient === null && $showWarnings === true)
+
+		if ($updatedClient === null && $showWarnings === true)
 		{
 			if ($tokens === null)
 			{
