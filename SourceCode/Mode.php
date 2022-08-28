@@ -25,7 +25,7 @@ namespace DigitalZenWorks\GoogleApiAuthorization;
 /**
  * The Mode enum.
  *
- * Contians all the modes of authorization.
+ * Contains all the modes of authorization.
  */
 enum Mode
 {
