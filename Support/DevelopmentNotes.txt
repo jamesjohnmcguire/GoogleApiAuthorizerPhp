@@ -8,3 +8,11 @@ Tasks
 	build.sh with 	phpDocumentor.phar --setting="graphs.enabled=true" -d SourceCode -t Documentation
 		Make consistent: tokensFilePath, tokenFilePath, tokensFile
 		Add git hub auto-update hook	This package is not auto-updated. Please set up the GitHub Hook for Packagist so that it gets updated whenever you push!
+Google Api Authorizer
+	https://developers.google.com/identity/protocols/oauth2/web-server#uri-validation
+
+	$client->setIncludeGrantedScopes(true);
+
+	https://www.googleapis.com/auth/drive
+
+	AIzaSyBDfoxO8FhM7bdmKVaioe8Uv9f7pu2kb6w
