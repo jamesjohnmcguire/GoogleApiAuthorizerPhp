@@ -127,7 +127,59 @@ final class UnitTests extends TestCase
 		$this->assertInstanceOf('Google\Service\Drive\About', $response);
 	}
 
-	public function testServiceAccountSuccess()
+	public function testServiceAccountFailNoFileOrEnvironementVariable()
+	{
+		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS';
+		putenv($environmentVariable);
+
+		$client = Authorizer::authorize(
+			Mode::ServiceAccount,
+			null,
+			null,
+			null,
+			'Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			null,
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$this->assertNull($client);
+	}
+
+	public function testServiceAccountEnvironmentVariableSuccess()
+	{
+		$serviceAccountFilePath = realpath($this->serviceAccountFilePath);
+		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS=' .
+			$serviceAccountFilePath;
+		putenv($environmentVariable);
+
+		$client = Authorizer::authorize(
+			Mode::ServiceAccount,
+			null,
+			null,
+			null,
+			'Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			null,
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$this->assertNotNull($client);
+
+		$service = new \Google_Service_Drive($client);
+		$about = $service->about;
+
+		$options =
+		[
+			'fields' => 'storageQuota',
+			'prettyPrint' => true
+		];
+
+		$response = $about->get($options);
+		$this->assertNotNull($response);
+
+		$this->assertInstanceOf('Google\Service\Drive\About', $response);
+	}
+
+	public function testServiceAccountFileSuccess()
 	{
 		$client = Authorizer::authorize(
 			Mode::ServiceAccount,
@@ -138,7 +190,7 @@ final class UnitTests extends TestCase
 			['https://www.googleapis.com/auth/drive'],
 			null,
 			['promptUser' => false, 'showWarnings' => false]);
-	
+
 		$this->assertNotNull($client);
 
 		$service = new \Google_Service_Drive($client);
