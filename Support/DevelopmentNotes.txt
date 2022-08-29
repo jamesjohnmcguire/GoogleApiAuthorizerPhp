@@ -16,3 +16,52 @@ Google Api Authorizer
 	https://www.googleapis.com/auth/drive
 
 	AIzaSyBDfoxO8FhM7bdmKVaioe8Uv9f7pu2kb6w
+Google Api Authorizer
+	BaseClientService
+	BaseClientService.Initializer initializer
+
+		// Summary:
+		//     Creates the back-off handler with Google.Apis.Util.ExponentialBackOff. Overrides
+		//     this method to change the default behavior of back-off handler (e.g. you can
+		//     change the maximum waited request's time span, or create a back-off handler with
+		//     you own implementation of Google.Apis.Util.IBackOff).
+		protected virtual BackOffHandler CreateBackOffHandler()
+		{
+			return new BackOffHandler(new ExponentialBackOff());
+		}
+
+				credentialedAccount =
+					GoogleCredential.FromFile(credentialsFile);
+				credentialedAccount = credentialedAccount.CreateScoped(Scopes);
+
+				initializer = new BaseClientService.Initializer();
+				initializer.ApplicationName = "Backup Manager";
+				initializer.HttpClientInitializer = credentialedAccount;
+
+	#pragma warning disable IDE0074 // Use compound assignment
+
+	https://cloud.google.com/docs/authentication/production
+
+	https://webcache.googleusercontent.com/search?q=cache%3AEFEwuv7IYC8J%3Ahttps%3A%2F%2Fcloud.google.com%2Fdocs%2Fauthentication%2Fproduction&cd=1&hl=en&ct=clnk&gl=jp
+
+	public object AuthImplicit(string projectId)
+	{
+		// If you don't specify credentials when constructing the client, the
+		// client library will look for credentials in the environment.
+		var credential = GoogleCredential.GetApplicationDefault();
+		var storage = StorageClient.Create(credential);
+		// Make an authenticated API request.
+		var buckets = storage.ListBuckets(projectId);
+		foreach (var bucket in buckets)
+		{
+			Console.WriteLine(bucket.Name);
+		}
+		return null;
+	}
+
+	https://cloud.google.com/docs/authentication
+
+	https://webcache.googleusercontent.com/search?q=cache%3AEFEwuv7IYC8J%3Ahttps%3A%2F%2Fcloud.google.com%2Fdocs%2Fauthentication%2Fproduction&cd=1&hl=en&ct=clnk&gl=jp
+
+	c# google drive api example
+		https://developers.google.com/drive/api/quickstart/dotnet
