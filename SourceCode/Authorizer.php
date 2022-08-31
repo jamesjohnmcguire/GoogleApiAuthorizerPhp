@@ -80,13 +80,13 @@ class Authorizer
 			$keyExists = array_key_exists('promptUser', $options);
 			if ($keyExists === true)
 			{
-				$promptUser = $options['promptUser'];
+				$this->promptUser = $options['promptUser'];
 			}
 
 			$keyExists = array_key_exists('showWarnings', $options);
 			if ($keyExists === true)
 			{
-				$showWarnings = $options['showWarnings'];
+				$this->showWarnings = $options['showWarnings'];
 			}
 		}
 	}
