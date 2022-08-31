@@ -832,8 +832,9 @@ class Authorizer
 		bool $showWarnings): ?object
 	{
 		$updatedClient = null;
+		$isArray = false;
 
-		if ($tokens !== null)
+		if ($client !== null && $tokens !== null)
 		{
 			$isArray = is_array($tokens);
 			$errorExists = array_key_exists('error', $tokens);
