@@ -44,45 +44,11 @@ final class UnitTests extends TestCase
 		$this->assertTrue($result);
 	}
 
-	public function testDiscoverFail()
+	public function testDiscoverAllFilesNoEnvironmentVariableSuccess()
 	{
 		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS';
 		putenv($environmentVariable);
 
-		$client = Authorizer::authorize(
-			Mode::Discover,
-			null,
-			null,
-			$this->tokensFilePath,
-			'Google Drive API File Uploader',
-			['https://www.googleapis.com/auth/drive'],
-			'http://localhost:8000/test.php',
-			['promptUser' => false, 'showWarnings' => false]);
-
-		$this->assertNull($client);
-	}
-
-	public function testDiscoveryObjectFail()
-	{
-		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS';
-		putenv($environmentVariable);
-
-		$authorizer = new Authorizer('Google Drive API File Uploader',
-			['https://www.googleapis.com/auth/drive'],
-			['promptUser' => false, 'showWarnings' => false]);
-
-		$client = $authorizer->apiAuthorize(
-			Mode::Discover,
-			null,
-			null,
-			$this->tokensFilePath,
-			'http://localhost:8000/test.php');
-
-		$this->assertNull($client);
-	}
-
-	public function testDiscoverAllFilesSuccess()
-	{
 		$client = Authorizer::authorize(
 			Mode::Discover,
 			$this->credentialsFilePath,
@@ -98,11 +64,8 @@ final class UnitTests extends TestCase
 		$this->assertGoogleAbout($client);
 	}
 
-	public function testDiscoverAllFilesNoEnvironmentVariableSuccess()
+	public function testDiscoverAllFilesSuccess()
 	{
-		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS';
-		putenv($environmentVariable);
-
 		$client = Authorizer::authorize(
 			Mode::Discover,
 			$this->credentialsFilePath,
@@ -138,18 +101,139 @@ final class UnitTests extends TestCase
 		$this->assertGoogleAbout($client);
 	}
 
-	public function testDiscoverServiceAcountFileSuccess()
+	public function testDiscoverFail()
 	{
+		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS';
+		putenv($environmentVariable);
+
 		$client = Authorizer::authorize(
 			Mode::Discover,
 			null,
-			$this->serviceAccountFilePath,
 			null,
+			$this->tokensFilePath,
 			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive'],
 			'http://localhost:8000/test.php',
 			['promptUser' => false, 'showWarnings' => false]);
 
+		$this->assertNull($client);
+	}
+
+	public function testDiscoverObjectFail()
+	{
+		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS';
+		putenv($environmentVariable);
+
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorize(
+			Mode::Discover,
+			null,
+			null,
+			$this->tokensFilePath,
+			'http://localhost:8000/test.php');
+
+		$this->assertNull($client);
+	}
+
+	public function testDiscoveryObjectCredentialsFilesSuccess()
+	{
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorize(
+			Mode::Discover,
+			$this->credentialsFilePath,
+			null,
+			$this->tokensFilePath,
+			'http://localhost:8000/test.php');
+	
+		$this->assertNotNull($client);
+
+		$this->assertGoogleAbout($client);
+	}
+
+	public function testDiscoveryObjectServiceAccountEnvironmentVariableSuccess()
+	{
+		$serviceAccountFilePath = realpath($this->serviceAccountFilePath);
+		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS=' .
+			$serviceAccountFilePath;
+		putenv($environmentVariable);
+
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorize(
+			Mode::Discover,
+			null,
+			null,
+			null,
+			'http://localhost:8000/test.php');
+	
+		$this->assertNotNull($client);
+
+		$this->assertGoogleAbout($client);
+	}
+
+	public function testDiscoveryObjectServiceAccountFileSuccess()
+	{
+		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS';
+		putenv($environmentVariable);
+
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorize(
+			Mode::Discover,
+			null,
+			$this->serviceAccountFilePath,
+			null,
+			'http://localhost:8000/test.php');
+
+		$this->assertNotNull($client);
+
+		$this->assertGoogleAbout($client);
+	}
+
+	public function testDiscoveryObjectSuccess()
+	{
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorize(
+			Mode::Discover,
+			$this->credentialsFilePath,
+			$this->serviceAccountFilePath,
+			$this->tokensFilePath,
+			'http://localhost:8000/test.php');
+	
+		$this->assertNotNull($client);
+
+		$this->assertGoogleAbout($client);
+	}
+
+	public function testDiscoveryObjectTokensSuccess()
+	{
+		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS';
+		putenv($environmentVariable);
+
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorize(
+			Mode::Discover,
+			$this->credentialsFilePath,
+			null,
+			$this->tokensFilePath,
+			'http://localhost:8000/test.php');
+	
 		$this->assertNotNull($client);
 
 		$this->assertGoogleAbout($client);
@@ -175,34 +259,60 @@ final class UnitTests extends TestCase
 		$this->assertGoogleAbout($client);
 	}
 
-	public function testDiscoveryObjectSuccess()
+	public function testDiscoverServiceAccountEnvironmentVariableSuccess()
 	{
-		$authorizer = new Authorizer('Google Drive API File Uploader',
+		$serviceAccountFilePath = realpath($this->serviceAccountFilePath);
+		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS=' .
+			$serviceAccountFilePath;
+		putenv($environmentVariable);
+
+		$client = Authorizer::authorize(
+			Mode::Discover,
+			null,
+			null,
+			null,
+			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive'],
+			'http://localhost:8000/test.php',
 			['promptUser' => false, 'showWarnings' => false]);
 
-		$client = $authorizer->apiAuthorize(
-			Mode::Discover,
-			$this->credentialsFilePath,
-			$this->serviceAccountFilePath,
-			$this->tokensFilePath,
-			'http://localhost:8000/test.php');
-	
 		$this->assertNotNull($client);
 
-		$service = new \Google_Service_Drive($client);
-		$about = $service->about;
+		$this->assertGoogleAbout($client);
+	}
 
-		$options =
-		[
-			'fields' => 'storageQuota',
-			'prettyPrint' => true
-		];
+	public function testDiscoverServiceAccountFileSuccess()
+	{
+		$client = Authorizer::authorize(
+			Mode::Discover,
+			null,
+			$this->serviceAccountFilePath,
+			null,
+			'Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			'http://localhost:8000/test.php',
+			['promptUser' => false, 'showWarnings' => false]);
 
-		$response = $about->get($options);
-		$this->assertNotNull($response);
+		$this->assertNotNull($client);
 
-		$this->assertInstanceOf('Google\Service\Drive\About', $response);
+		$this->assertGoogleAbout($client);
+	}
+
+	public function testDiscoverTokensSuccess()
+	{
+		$client = Authorizer::authorize(
+			Mode::Discover,
+			$this->credentialsFilePath,
+			null,
+			$this->tokensFilePath,
+			'Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			'http://localhost:8000/test.php',
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$this->assertNotNull($client);
+
+		$this->assertGoogleAbout($client);
 	}
 
 	public function testServiceAccountDirectEnvironmentVariableSuccess()
@@ -220,19 +330,7 @@ final class UnitTests extends TestCase
 	
 		$this->assertNotNull($client);
 
-		$service = new \Google_Service_Drive($client);
-		$about = $service->about;
-
-		$options =
-		[
-			'fields' => 'storageQuota',
-			'prettyPrint' => true
-		];
-
-		$response = $about->get($options);
-		$this->assertNotNull($response);
-
-		$this->assertInstanceOf('Google\Service\Drive\About', $response);
+		$this->assertGoogleAbout($client);
 	}
 
 	public function testServiceAccountDirectFileSuccess()
@@ -245,35 +343,19 @@ final class UnitTests extends TestCase
 
 		$this->assertNotNull($client);
 
-		$service = new \Google_Service_Drive($client);
-		$about = $service->about;
-
-		$options =
-		[
-			'fields' => 'storageQuota',
-			'prettyPrint' => true
-		];
-
-		$response = $about->get($options);
-		$this->assertNotNull($response);
-
-		$this->assertInstanceOf('Google\Service\Drive\About', $response);
+		$this->assertGoogleAbout($client);
 	}
 
-	public function testServiceAccountNoFileOrEnvironementVariableFail()
+	public function testServiceAccountDirectNoFileOrEnvironementVariableFail()
 	{
 		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS';
 		putenv($environmentVariable);
 
-		$client = Authorizer::authorize(
-			Mode::ServiceAccount,
-			null,
-			null,
+		$client = Authorizer::authorizeServiceAccount(
 			null,
 			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive'],
-			null,
-			['promptUser' => false, 'showWarnings' => false]);
+			false);
 
 		$this->assertNull($client);
 	}
@@ -297,19 +379,7 @@ final class UnitTests extends TestCase
 
 		$this->assertNotNull($client);
 
-		$service = new \Google_Service_Drive($client);
-		$about = $service->about;
-
-		$options =
-		[
-			'fields' => 'storageQuota',
-			'prettyPrint' => true
-		];
-
-		$response = $about->get($options);
-		$this->assertNotNull($response);
-
-		$this->assertInstanceOf('Google\Service\Drive\About', $response);
+		$this->assertGoogleAbout($client);
 	}
 
 	public function testServiceAccountFileSuccess()
@@ -326,33 +396,126 @@ final class UnitTests extends TestCase
 
 		$this->assertNotNull($client);
 
-		$service = new \Google_Service_Drive($client);
-		$about = $service->about;
-
-		$options =
-		[
-			'fields' => 'storageQuota',
-			'prettyPrint' => true
-		];
-
-		$response = $about->get($options);
-		$this->assertNotNull($response);
-
-		$this->assertInstanceOf('Google\Service\Drive\About', $response);
+		$this->assertGoogleAbout($client);
 	}
 
-	public function testServiceAccountDirectNoFileOrEnvironementVariableFail()
+	public function testServiceAccountNoEnvironementVariableOrFileFail()
 	{
 		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS';
 		putenv($environmentVariable);
 
-		$client = Authorizer::authorizeServiceAccount(
+		$client = Authorizer::authorize(
+			Mode::ServiceAccount,
+			null,
+			null,
+			null,
+			'Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			null,
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$this->assertNull($client);
+	}
+
+	public function testServiceAccountObjectEnvironementVariableSuccess()
+	{
+		$serviceAccountFilePath = realpath($this->serviceAccountFilePath);
+		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS=' .
+			$serviceAccountFilePath;
+		putenv($environmentVariable);
+
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorize(
+			Mode::ServiceAccount,
+			null,
+			null,
+			null,
+			'http://localhost:8000/test.php');
+
+		$this->assertNotNull($client);
+
+		$this->assertGoogleAbout($client);
+	}
+
+	public function testServiceAccountObjectFileSuccess()
+	{
+		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS';
+		putenv($environmentVariable);
+
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorize(
+			Mode::ServiceAccount,
+			null,
+			$this->serviceAccountFilePath,
+			null,
+			'http://localhost:8000/test.php');
+
+		$this->assertNotNull($client);
+
+		$this->assertGoogleAbout($client);
+	}
+
+	public function testServiceAccountObjectNoEnvironementVariableOrFileFail()
+	{
+		$environmentVariable = 'GOOGLE_APPLICATION_CREDENTIALS';
+		putenv($environmentVariable);
+
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorize(
+			Mode::ServiceAccount,
+			null,
+			null,
+			null,
+			'http://localhost:8000/test.php');
+
+		$this->assertNull($client);
+	}
+
+	public function testTokensDirectFailNoCredentials()
+	{
+		$client = Authorizer::authorizeToken(
+			null,
+			$this->tokensFilePath,
+			'Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			false);
+
+		$this->assertNull($client);
+	}
+
+	public function testTokensDirectFailNoTokens()
+	{
+		$client = Authorizer::authorizeToken(
+			$this->credentialsFilePath,
 			null,
 			'Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive'],
 			false);
 
 		$this->assertNull($client);
+	}
+
+	public function testTokensDirectSuccess()
+	{
+		$client = Authorizer::authorizeToken(
+			$this->credentialsFilePath,
+			$this->tokensFilePath,
+			'Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			false);
+
+		$this->assertNotNull($client);
+
+		$this->assertGoogleAbout($client);
 	}
 
 	public function testTokensFailNoCredentials()
@@ -385,30 +548,95 @@ final class UnitTests extends TestCase
 		$this->assertNull($client);
 	}
 
-	public function testTokensDirectSuccess()
+	public function testTokensObjectDirectFailNoCredentials()
 	{
-		$client = Authorizer::authorizeToken(
-			$this->credentialsFilePath,
-			$this->tokensFilePath,
-			'Google Drive API File Uploader',
+		$authorizer = new Authorizer('Google Drive API File Uploader',
 			['https://www.googleapis.com/auth/drive'],
-			false);
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorizeToken(
+			null,
+			$this->tokensFilePath);
+
+		$this->assertNull($client);
+	}
+
+	public function testTokensObjectDirectFailNoTokens()
+	{
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorizeToken(
+			$this->credentialsFilePath,
+			null);
+
+		$this->assertNull($client);
+	}
+
+	public function testTokensObjectDirectSuccess()
+	{
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorizeToken(
+			$this->credentialsFilePath,
+			$this->tokensFilePath);
 
 		$this->assertNotNull($client);
 
-		$service = new \Google_Service_Drive($client);
-		$about = $service->about;
+		$this->assertGoogleAbout($client);
+	}
 
-		$options =
-		[
-			'fields' => 'storageQuota',
-			'prettyPrint' => true
-		];
+	public function testTokensObjectFailNoCredentials()
+	{
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
 
-		$response = $about->get($options);
-		$this->assertNotNull($response);
+		$client = $authorizer->apiAuthorize(
+			Mode::Token,
+			null,
+			null,
+			null,
+			'http://localhost:8000/test.php');
 
-		$this->assertInstanceOf('Google\Service\Drive\About', $response);
+		$this->assertNull($client);
+	}
+
+	public function testTokensObjectFailNoTokens()
+	{
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorize(
+			Mode::Token,
+			$this->credentialsFilePath,
+			null,
+			null,
+			'http://localhost:8000/test.php');
+
+		$this->assertNull($client);
+	}
+
+	public function testTokensObjectSuccess()
+	{
+		$authorizer = new Authorizer('Google Drive API File Uploader',
+			['https://www.googleapis.com/auth/drive'],
+			['promptUser' => false, 'showWarnings' => false]);
+
+		$client = $authorizer->apiAuthorize(
+			Mode::Token,
+			$this->credentialsFilePath,
+			null,
+			$this->tokensFilePath,
+			'http://localhost:8000/test.php');
+
+		$this->assertNotNull($client);
+
+		$this->assertGoogleAbout($client);
 	}
 
 	public function testTokensSuccess()
@@ -423,19 +651,7 @@ final class UnitTests extends TestCase
 	
 		$this->assertNotNull($client);
 
-		$service = new \Google_Service_Drive($client);
-		$about = $service->about;
-
-		$options =
-		[
-			'fields' => 'storageQuota',
-			'prettyPrint' => true
-		];
-
-		$response = $about->get($options);
-		$this->assertNotNull($response);
-
-		$this->assertInstanceOf('Google\Service\Drive\About', $response);
+		$this->assertGoogleAbout($client);
 	}
 
 	private function assertGoogleAbout($client)
