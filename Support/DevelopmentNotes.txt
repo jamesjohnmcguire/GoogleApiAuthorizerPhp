@@ -65,3 +65,183 @@ Google Api Authorizer
 
 	c# google drive api example
 		https://developers.google.com/drive/api/quickstart/dotnet
+Google Api Authorizaer
+	Change?	GoogleApiAuthorizationNet
+	Tests
+		PHP
+			Fail
+				Discover
+					testDiscoverFail()
+				DiscoverObject
+					testDiscoveryObjectFail()
+
+				ServiceAccountNoEnvironmentVariableOrFile
+					testServiceAccountNoEnvironementVariableOrFileFail()
+				ServiceAccountDirectNoEnvironmentVariableOrFile
+					testServiceAccountDirectNoFileOrEnvironementVariableFail()
+				ServiceAccountObjectNoEnvironmentVariableOrFile
+					testServiceAccountObjectNoEnvironementVariableOrFileFail()
+				ServiceAccountObjectDirectNoEnvironmentVariableOrFile
+
+				TokensNoCredentials
+					testTokensFailNoCredentials()
+				TokensNoTokens
+					testTokensFailNoTokens()
+				TokensObjectNoCredentials
+					testTokensObjectFailNoCredentials()
+				TokensObjectNoTokens
+					testTokensObjectFailNoTokens()
+				TokensDirectNoCredentials
+					testTokensDirectFailNoCredentials()
+				TokensDirectNoTokens
+					testTokensDirectFailNoTokens()
+				TokensObjectDirectNoCredentials
+					testTokensObjectDirectFailNoCredentials()
+				TokensObjectDirectNoTokens
+					testTokensObjectDirectFailNoTokens()
+
+			Success
+				DiscoverAllFiles
+					testDiscoverAllFilesSuccess()
+					testDiscoverAllFilesNoEnvironmentVariableSuccess()
+				DiscoverCredentialsFiles
+					testDiscoverCredentialsFilesSuccess()
+				DiscoverServiceAcountEnvironmentVariable
+					testDiscoverServiceAccountEnvironmentVariableSuccess()
+				DiscoverServiceAcountFile
+					testDiscoverServiceAcountFileSuccess()
+					testDiscoverServiceAccountFileNoEnvironmentVariableSuccess()
+				DiscoverTokens
+					testDiscoverTokensSuccess()
+				DiscoverObject
+				DiscoverObjectAllFiles
+					testDiscoveryObjectSuccess()
+				DiscoverObjectCredentialsFiles
+					testDiscoveryObjectCredentialsFilesSuccess()
+				DiscoverObjectServiceAcountEnvironmentVariable
+					testDiscoveryObjectServiceAccountEnvironmentVariableSuccess()
+				DiscoverObjectServiceAcountFile
+					testDiscoveryObjectServiceAccountFileSuccess()
+				DiscoverObjectTokens
+					testDiscoveryObjectTokensSuccess()
+
+				ServiceAccountEnvironmentVariable
+					testServiceAccountEnvironmentVariableSuccess()
+				ServiceAccountFile
+					testServiceAccountFileSuccess()
+				ServiceAccountDirectEnvironmentVariable
+					testServiceAccountDirectEnvironmentVariableSuccess()
+				ServiceAccountDirectFile
+					testServiceAccountDirectFileSuccess()
+				ServiceAccountObjectEnvironmentVariable
+					testServiceAccountObjectEnvironementVariableSuccess()
+				ServiceAccountObjectFile
+					testServiceAccountObjectFileSuccess()
+				ServiceAccountObjectDirectEnvironmentVariable
+				ServiceAccountObjectDirectFile
+
+				Tokens
+					testTokensSuccess()
+				TokensObject
+					testTokensObjectSuccess()
+				TokensDirect
+					testTokensDirectSuccess()
+				TokensObjectDirect
+					testTokensObjectDirectSuccess()
+		NET
+			Fail
+				Discover
+					DiscoverFail()
+				DiscoverObject
+					DiscoverObjectFail()
+
+				ServiceAccountNoEnvironmentVariableOrFile
+					ServiceAccountNoFileOrEnvironementVariableFail()
+				ServiceAccountDirectNoEnvironmentVariableOrFile
+					ServiceAccountDirectNoFileOrEnvironementVariableFail()
+				ServiceAccountObjectNoEnvironmentVariableOrFile
+					ServiceAccountObjectNoFileOrEnvironementVariableFail
+				ServiceAccountObjectDirectNoEnvironmentVariableOrFile
+					ServiceAccountObjectDirectNoFileOrEnvironementVariableFail
+
+				TokensNoCredentials
+					TokensNoCredentialsFail
+				TokensNoTokens
+				TokensObjectNoCredentials
+				TokensObjectNoTokens
+				TokensDirectNoCredentials
+				TokensDirectNoTokens
+				TokensObjectDirectNoCredentials
+				TokensObjectDirectNoTokens
+
+			Success
+				Discover
+				DiscoverAllFiles
+				DiscoverCredentialsFiles
+				DiscoverServiceAcountEnvironmentVariable
+				DiscoverServiceAcountFile
+				DiscoverTokens
+				DiscoverObject
+				DiscoverObjectAllFiles
+				DiscoverObjectCredentialsFiles
+				DiscoverObjectServiceAcountEnvironmentVariable
+				DiscoverObjectServiceAcountFile
+				DiscoverObjectTokens
+
+				ServiceAccountEnvironmentVariable
+					TestServiceAccountEnvironmentVariableSuccess()
+				ServiceAccountFile
+					TestServiceAccountFileSuccess()
+				ServiceAccountDirectEnvironmentVariable
+					TestServiceAccountDirectEnvironmentVariableSuccess()
+				ServiceAccountDirectFile
+					TestServiceAccountDirectFileSuccess()
+				ServiceAccountObjectEnvironmentVariable
+				ServiceAccountObjectFile
+				ServiceAccountObjectDirectEnvironmentVariable
+				ServiceAccountObjectDirectFile
+
+				Tokens
+				TokensObject
+				TokensDirect
+				TokensObjectDirect
+
+			EnvironmentVariable
+			File
+			NoEnvironmentVariable
+			Object
+			Direct
+	test  GOOGLE_APPLICATION_CREDENTIALS  as credentials file
+GoogleApiAuthorizerNet
+	https://github.com/jamesjohnmcguire/GoogleApiAuthorizerNet	Fix Readme
+
+	 TokensNoTokensFail
+	   Source: GoogleApiAuthorizerTests.cs line 331
+	   Duration: 12.6 min
+
+	  Message: 
+	System.InvalidOperationException : Error creating credential from JSON or JSON parameters. Unrecognized credential type .
+
+	  Stack Trace: 
+	DefaultCredentialProvider.CreateDefaultCredentialFromParameters(JsonCredentialParameters credentialParameters)
+	DefaultCredentialProvider.CreateDefaultCredentialFromStream(Stream stream)
+	GoogleCredential.FromStream(Stream stream)
+	GoogleCredential.FromFile(String path)
+	Authorizer.SetClient(String credentialsFilePath, String name, IList`1 scopes, Boolean credentialsRequired) line 636
+	Authorizer.RequestAuthorization(String credentialsFilePath, String tokensFilePath, String name, IList`1 scopes) line 275
+	Authorizer.FinalFallBack(Initializer client, String credentialsFilePath, String tokensFilePath, String name, IList`1 scopes, Uri redirectUrl, Boolean promptUser) line 535
+	Authorizer.Authorize(Mode mode, String credentialsFilePath, String serviceAccountFilePath, String tokensFilePath, String name, IList`1 scopes, Uri redirectUrl, Boolean promptUser) line 110
+	GoogleApiAuthorizerTests.TokensNoTokensFail() line 333
+
+	https://developers.google.com/drive/api/quickstart/java
+	https://developers.google.com/drive/api/quickstart/js
+
+	Google APIs client Library for .NET	https://github.com/googleapis/google-api-dotnet-client
+	Google Cloud Libraries for .NET	https://github.com/googleapis/google-cloud-dotnet
+
+	Review	c# google api oauth redirect
+
+	https://developers.google.com/api-client-library/dotnet/guide/aaa_oauth
+	Play with sample at: https://developers.google.com/api-client-library/dotnet/guide/aaa_oauth
+Google Api Authorization
+	async methods
