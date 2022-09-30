@@ -245,3 +245,24 @@ GoogleApiAuthorizerNet
 	Play with sample at: https://developers.google.com/api-client-library/dotnet/guide/aaa_oauth
 Google Api Authorization
 	async methods
+
+		/// <summary>
+		/// GoogleWebAuthorizationBroker Test.
+		/// </summary>
+		[Test]
+		public async Task GoogleWebAuthorizationBrokerTest()
+		{
+			GoogleClientSecrets secrets =
+				GoogleClientSecrets.FromFile(credentialsFilePath);
+			FileDataStore books = new FileDataStore("Books.ListMyLibrary");
+
+			UserCredential credential =
+				await GoogleWebAuthorizationBroker.AuthorizeAsync(
+				secrets.Secrets,
+				scopes,
+				"user",
+				CancellationToken.None,
+				books).ConfigureAwait(false);
+
+			Assert.NotNull(credential);
+		}
