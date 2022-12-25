@@ -167,12 +167,19 @@ Google Api Authorizaer
 				TokensNoCredentials
 					TokensNoCredentialsFail
 				TokensNoTokens
+					TokensNoTokensFail
 				TokensObjectNoCredentials
+					TokensObjectNoCredentialsFail
 				TokensObjectNoTokens
+					TokensObjectNoTokensFail
 				TokensDirectNoCredentials
+					TokensDirectNoCredentialsFail
 				TokensDirectNoTokens
+					TokensDirectNoTokensFail
 				TokensObjectDirectNoCredentials
+					TokensObjectDirectNoCredentialsFail
 				TokensObjectDirectNoTokens
+					TokensObjectDirectNoTokensFail
 
 			Success
 				Discover
@@ -266,3 +273,18 @@ Google Api Authorization
 
 			Assert.NotNull(credential);
 		}
+Google API Authorizer
+	stored user credential using the format supported by the Cloud SDK
+	Credential Types Supporting Various Use Cases	https://cloud.google.com/storage/docs/gsutil/addlhelp/CredentialTypesSupportingVariousUseCases
+	https://googleapis.dev/dotnet/Google.Apis.Auth/1.57.0/api/Google.Apis.Auth.OAuth2.GoogleCredential.html
+
+	https://developers.google.com/api-client-library/dotnet/guide/aaa_oauth
+	https://developers.google.com/api-client-library/dotnet/guide/aaa_oauth
+	https://developers.google.com/identity/protocols/oauth2/native-app
+	https://developers.google.com/identity/protocols/oauth2/web-server#incrementalAuth
+	https://developers.google.com/api-client-library/dotnet/get_started
+	https://developers.google.com/workspace/guides/create-credentials#desktop-app
+	https://github.com/googlesamples/oauth-apps-for-windows
+	https://console.cloud.google.com/apis/credentials?project=avian-sunlight-270307
+	c# GoogleCredential.FromFile
+		https://www.csharpcodi.com/csharp-examples/Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(string)/
