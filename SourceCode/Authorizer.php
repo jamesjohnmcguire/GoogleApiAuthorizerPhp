@@ -25,7 +25,7 @@ namespace DigitalZenWorks\GoogleApiAuthorization;
 /**
  * Authorizer class.
  *
- * Contians all the core functionality for authorization.
+ * Contains all the core functionality for authorization.
  */
 class Authorizer
 {
@@ -60,7 +60,7 @@ class Authorizer
 	/**
 	 * Constructor.
 	 *
-	 * Constuctor method.
+	 * Constructor method.
 	 *
 	 * @param string $name    The name of the project requesting authorization.
 	 * @param array  $scopes  The requested scopes of the project.
