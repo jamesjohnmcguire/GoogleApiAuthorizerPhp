@@ -1,8 +1,51 @@
 {
-    "require-dev": {
-        "phpunit/phpunit": "^9.5"
-    },
-    "require": {
-        "google/apiclient": "^2.11"
-    }
+	"description": "Google API Authorization Package File",
+	"homepage": "https://github.com/jamesjohnmcguire/GoogleApiAuthorizationPhp/",
+	"license": "MIT",
+	"name": "digitalzenworks/google-api-authorization",
+	"type": "library",
+	"authors": [
+		{
+			"name": "JamesMc",
+			"email": "jamesjohnmcguire@gmail.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"DigitalZenWorks\\GoogleApiAuthorization\\": "SourceCode/"
+		}
+	},
+	"config": {
+		"process-timeout": 0,
+		"vendor-dir": "SourceCode/vendor",
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"keywords": [
+		"Google API",
+		"Authorization",
+		"Service Account",
+		"Tokens",
+		"OAuth"
+	],
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/jamesjohnmcguire/GoogleApiAuthorizationPhp/"
+		}
+	],
+	"require":
+	{
+		"google/apiclient": "^2.11"
+	},
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "*",
+		"php-parallel-lint/php-parallel-lint": "^1.2.0",
+		"phpcompatibility/php-compatibility": "*",
+		"phpcsstandards/phpcsdevtools": "^1.0",
+		"phpstan/phpstan": "^1.2",
+		"phpunit/phpunit": "^9.5",
+		"squizlabs/php_codesniffer": "*"
+	}
 }

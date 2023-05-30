@@ -1,5 +1,5 @@
-vendor
+SourceCode/vendor/
 
 credentials.json
-GoogleDriveServiceAccount.json
+ServiceAccount.json
 tokens.json
