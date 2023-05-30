@@ -137,6 +137,41 @@ function TestTokens()
 	}
 }
 
+if (PHP_SAPI == 'cli')
+{
+	if (!empty($argv[1]))
+	{
+		$command = $argv[1];
+	}
+
+	if (!empty($argv[2]))
+	{
+		$server = $argv[2];
+	}
+
+	if (!empty($argv[3]))
+	{
+		$role = $argv[3];
+	}
+}
+else
+{
+	if ((!empty($_GET)) && (!empty($_GET['command'])))
+	{
+		$command = $_GET['command'];
+	}
+
+	if ((!empty($_GET)) && (!empty($_GET['server'])))
+	{
+		$server = $_GET['server'];
+	}
+
+	if ((!empty($_GET)) && (!empty($_GET['role'])))
+	{
+		$role = $_GET['role'];
+	}
+}
+
 TestDiscover();
 TestRequestUser();
 TestTokens();
