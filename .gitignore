@@ -1,4 +1,4 @@
-SourceCode/vendor/
+vendor/
 
 credentials.json
 ServiceAccount.json
