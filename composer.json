@@ -29,12 +29,6 @@
 		"Tokens",
 		"OAuth"
 	],
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/jamesjohnmcguire/GoogleApiAuthorizationPhp/"
-		}
-	],
 	"require":
 	{
 		"google/apiclient": "^2.11"
