@@ -15,22 +15,38 @@ use PHPUnit\Framework\TestCase;
 
 final class UnitTests extends TestCase
 {
+	protected ?string $credentialsDirectory;
 	protected ?string $credentialsFilePath = 'credentials.json';
 	protected ?string $serviceAccountFilePath = 'ServiceAccount.json';
 	protected ?string $tokensFilePath = 'tokens.json';
 
 	public function setUp() : void
 	{
-	}
-
-	public static function setUpBeforeClass() : void
-	{
 		global $argv;
 
 		if (!empty($argv[5]))
 		{
-			self::$credentialsFilePath = $argv[5];
+			$this->credentialsFilePath = $argv[5];
 		}
+
+		$this->credentialsDirectory =
+			getenv('GOOGLEAPIAUTHORIZER_TEST_DIRECTORY');
+
+		if ($this->credentialsDirectory !== false)
+		{
+			$this->credentialsFilePath = $this->credentialsDirectory . '/' .
+				$this->credentialsFilePath;
+
+			$this->serviceAccountFilePath = $this->credentialsDirectory . '/' .
+				$this->serviceAccountFilePath;
+
+			$this->tokensFilePath = $this->credentialsDirectory . '/' .
+				$this->tokensFilePath;
+		}
+	}
+
+	public static function setUpBeforeClass() : void
+	{
 	}
 
 	public function tearDown() : void
