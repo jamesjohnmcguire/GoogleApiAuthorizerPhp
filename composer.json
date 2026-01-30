@@ -39,7 +39,7 @@
 		"phpcompatibility/php-compatibility": "*",
 		"phpcsstandards/phpcsdevtools": "^1.0",
 		"phpstan/phpstan": "^1.2",
-		"phpunit/phpunit": "^9.5",
+		"phpunit/phpunit": "^10.0",
 		"squizlabs/php_codesniffer": "*"
 	}
 }
